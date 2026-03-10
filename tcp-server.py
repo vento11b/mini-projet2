@@ -1,6 +1,5 @@
 import socket, sqlite3, threading, hashlib
 
-chats = []
 
 class Client:
     def __init__(self, csocket, address, sqli):
@@ -42,7 +41,9 @@ class Client:
         self.cursor.execute(f"INSERT INTO friends(username, friend) VALUES (?, ?)", (self.username, friend))
         self.sqli.commit()
         return "Friend added."
-    
+
+    def joinfriend(friend):
+        
     
 
 
