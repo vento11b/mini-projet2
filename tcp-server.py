@@ -1,53 +1,78 @@
 import socket, sqlite3, threading, hashlib
 
-class Terminal:
-    def __init__(self, address):
-        self.user = "guest"
-        self.address = address
 
-    def register(self, user, password):
-        conn = sqlite3.connect("Toki.db")
-        cursor = conn.cursor()
-        cursor.execute(f"SELECT * FROM User WHERE userid == '{hashlib.sha256(user.encode()).hexdigest()}'")
-        if len(cursor.fetchall()):
+class Client:
+    def __init__(self, address, sqli):
+        self.username = "guest"
+        self.address = address
+        #self.sqli = sqli
+        self.sqlic = sqli.cursor()
+
+
+    def register(self, username, password):
+        self.sqlic.execute(f"SELECT username FROM Users WHERE username == '{username}'")
+        if len(cursor.fetchall())>0:
             return "User already exist.\n\r"
         else:
-            cursor.execute(f"INSERT INTO User(userid, user, password) VALUES (?, ?, ?)", (hashlib.sha256(user.encode()).hexdigest(), user, hashlib.sha256(password.encode()).hexdigest()))
-            conn.commit()
+            self.sqlic.execute(f"INSERT INTO Users(username, password) VALUES (?, ?)", (username, hashlib.sha256(password.encode()).hexdigest()))
+            self.sqli.commit()
             return "User added.\n\r"
 
-    def login(self, user, password):
-        conn = sqlite3.connect("user.db")
-        cursor = conn.cursor()
-        self.user = user
+    def login(self, username, password):
+        self.sqlic.execute(f"SELECT username, password FROM Users WHERE username=='{username}' AND password == '{hashlib.sha256(password.encode()).hexdigest()}'")
+        
+        if len(self.sqlic.fetchall())==1:
+            self.username = username
+            return f"Welcome back, {self.username}"
+        else:
+            return "Wrong username or password"
 
 
-def conection_handler(cs, address):
+def conection_handler(csocket, address):
+    client = Client(address, sqlite3.connect("Toki.db"))
+
     print("Conection from "+address[0]+":"+str(address[1]))
-    t = Terminal(address)
-    cs.send(bytes("!h for help\n\r\n\r", encoding='utf-8'))
+
+    clientsocket.send(bytes("!h for help\n\r", encoding='utf-8'))
     while 1:
-        d = cs.recv(4096)
+        data = csocket.recv(4096)
         try:
-            s = d.decode()
+            string = data.decode()
         except UnicodeDecodeError:
             continue
 
-        print(f"{t.user} {t.address} -> {repr(s)[1:-1]}")
-        help = "!login user, password\n\r!register user, password\n\r"
+        cmd = string.split("\n")[0].split(" ")[0]
+        args = string.split("\n")[0].split(" ")[1:]
 
-        if not d:
+        print(f"{client.username} {client.address} -> {cmd} {args}")        
+
+        if data!="":
+            response = []
+            if client.username != "guest":
+                if cmd == "!h":
+                    response = ["!whoami", "!logout"]
+                if cmd == "!h":
+                    response = ["!whoami", "!logout"]
+            else:
+                if cmd == "!h":
+                    response = ["!whoami", "!login (username) (password)", "!register (username) (password)"]
+                elif cmd == "!login":
+                    if len(args)==2: response = [client.login(args[0], args[1])]
+                    else: response = ["There should be 2 arguments"]
+                elif cmd == "!register":
+                    if len(args)==2: response = [client.register(args[0], args[1])]
+                    else: response = ["There should be 2 arguments"]
+            if cmd == "!whoami":
+                response = [client.username]
+            csocket.send(("\n\r".join(response)+"\n\r").encode())
+        else:
             print(f"Client disconnected")
             break
-        elif s=="!h":
-            cs.send(help.encode())
-
-        elif s.split(" ")[0]=="!register":
-            cs.send(t.register(s.split(" ")[1], s.split(" ")[2]).encode())
             
 
 
 serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+serversocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 serversocket.bind(("0.0.0.0", 81))
 serversocket.listen(0)
 
