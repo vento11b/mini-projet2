@@ -1,5 +1,11 @@
 import socket, sqlite3, threading, hashlib
 
+serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+serversocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+serversocket.bind(("0.0.0.0", 81))
+serversocket.listen(0)
+
+rooms = {"private": {}, "public": {}}
 
 class Client:
     def __init__(self, csocket, address, sqli):
@@ -9,6 +15,9 @@ class Client:
         self.sqli = sqli
         self.cursor = sqli.cursor()
 
+    def exit():
+        rooms["private"].remove(self)
+        rooms["public"].remove(self)
 
     def register(self, username, password):
         self.cursor.execute(f"SELECT username FROM users WHERE username == '{username}'")
@@ -43,8 +52,8 @@ class Client:
         return "Friend added."
 
     def joinfriend(friend):
-        
-    
+        rooms["private"].append(self)
+        return f"Joined '{friend}'."
 
 
 
@@ -79,7 +88,23 @@ def conection_handler(csocket, address):
                 if cmd == "!addfriend":
                     response = [client.addfriend(args[0])]
                 if cmd == "!joinfriend":
-                    response = [client.addfriend(args[0])]
+                    #response = [client.joinfriend(args[0])]
+                    room ="".join(sorted([client.username, args[0]]))
+                    rooms["private"][room]=[]
+                    rooms["private"].setdefault(room, []).append(client)
+                    leave=0
+                    while not leave:
+                        print(f"room {room} -> {[i.username for i in rooms['private'][room]]}")
+                        data = csocket.recv(4096)
+                        for i in rooms["private"]:
+                            if (i!=client):
+                                i.csocket.send(data)
+                                try:
+                                    string = data.decode()
+                                except UnicodeDecodeError:
+                                    continue
+                                if string.splitlines()[0].split(" ")[0]:leave=1
+
                 
             else:
                 if cmd == "!h":
@@ -99,13 +124,14 @@ def conection_handler(csocket, address):
         else:
             print(f"Client disconnected.")
             break
-            
 
 
 serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 serversocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 serversocket.bind(("0.0.0.0", 81))
 serversocket.listen(0)
+
+
 
 while 1:
     (clientsocket, address) = serversocket.accept()
