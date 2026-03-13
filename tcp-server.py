@@ -10,6 +10,7 @@ rooms = {"private": {}, "public": {}}
 class Client:
     def __init__(self, csocket, address, sqli):
         self.username = "guest"
+        self.room = []
         self.csocket = csocket
         self.address = address
         self.sqli = sqli
@@ -51,9 +52,17 @@ class Client:
         self.sqli.commit()
         return "Friend added."
 
-    def joinfriend(friend):
-        rooms["private"].append(self)
-        return f"Joined '{friend}'."
+    def joinroom(self, room):
+        self.room = (room[0], room[1])
+        rooms[self.room[0]].setdefault(self.room[1], []).append(self)
+        return f"Joined '{self.room[1]}'."
+    
+    def leaveroom(self):
+        del rooms[self.room[0]][self.room[1]]
+        self.room = []
+        return f"Left '{self.room[1]}'."
+
+
 
 
 
@@ -79,31 +88,23 @@ def conection_handler(csocket, address):
 
             response = []
             if client.username != "guest":
+                if client.room != []:
+                    for c in rooms[client.room[0]][client.room[1]]:
+                        if c==client: continue
+                        c.csocket.send(f"{client.username} - ".encode())
+                        c.csocket.send(data)
+                    if cmd == "!leave":
+                        response = [client.leaveroom()]
                 if cmd == "!h":
-                    response = ["!whoami", "!logout", "!listfriends", "!listchannels", "!addfriend (friend)", "!createchannel", "!joinchannel", "!joinfriend", "!deletefriend"]
-                if cmd == "!logout":
+                    response = ["!whoami", "!logout", "!listfriends", "!listchannels", "!addfriend (friend)", "!createchannel", "!joinchannel", "!joinfriend", "!deletefriend", "!leave"]
+                elif cmd == "!logout":
                     response = [client.logout()]
-                if cmd == "!listfriends":
+                elif cmd == "!listfriends":
                     response = client.listfriends()
-                if cmd == "!addfriend":
+                elif cmd == "!addfriend":
                     response = [client.addfriend(args[0])]
-                if cmd == "!joinfriend":
-                    #response = [client.joinfriend(args[0])]
-                    room ="".join(sorted([client.username, args[0]]))
-                    rooms["private"][room]=[]
-                    rooms["private"].setdefault(room, []).append(client)
-                    leave=0
-                    while not leave:
-                        print(f"room {room} -> {[i.username for i in rooms['private'][room]]}")
-                        data = csocket.recv(4096)
-                        for i in rooms["private"]:
-                            if (i!=client):
-                                i.csocket.send(data)
-                                try:
-                                    string = data.decode()
-                                except UnicodeDecodeError:
-                                    continue
-                                if string.splitlines()[0].split(" ")[0]:leave=1
+                elif cmd == "!joinfriend":
+                    response = [client.joinroom(("private", "".join(sorted([client.username, args[0]]))))]
 
                 
             else:
