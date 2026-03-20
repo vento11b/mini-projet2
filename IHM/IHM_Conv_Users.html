@@ -1,4 +1,3 @@
-// ...existing code...
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -11,7 +10,7 @@
             height: 100%;
             margin: 0;
             font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-            background: #f3f6fb;
+            background: #d2e2fc;
         }
         body {
             display: flex;
@@ -20,7 +19,7 @@
             padding: 20px;
         }
 
-        /* Contrainte du conteneur qui contient logo + carte */
+        /* Contrainte du conteneur qui contient la carte */
         .center-container {
             width: 100%;
             max-width: 380px;
@@ -28,21 +27,6 @@
             flex-direction: column;
             align-items: center;
             box-sizing: border-box;
-        }
-
-        /* Espace réservé pour le logo */
-        .logo {
-            height: 90px;               /* hauteur de l'espace au-dessus */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 12px;
-            width: 100%;
-        }
-        .logo img {
-            max-height: 80px;
-            max-width: 100%;
-            object-fit: contain;
         }
 
         /* Carte du formulaire */
@@ -56,6 +40,23 @@
             flex-direction: column;
             gap: 12px;
             box-sizing: border-box;
+            align-items: center;
+        }
+
+        /* Espace logo placé DANS la carte */
+        .logo {
+            height: 120px;               /* hauteur de l'espace pour le logo à l'intérieur du cadre */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            margin-bottom: 6px;
+        }
+        .logo img {
+            max-height: 110px;           /* augmente la taille visible du logo */
+            max-width: 100%;
+            object-fit: contain;
+            display: block;
         }
 
         #form h1 {
@@ -63,6 +64,7 @@
             text-align: center;
             font-size: 1.25rem;
             color: #0f172a;
+            width: 100%;
         }
 
         /* Champs et bouton */
@@ -71,7 +73,7 @@
             width: 100%;
             padding: 10px 12px;
             border-radius: 8px;
-            border: 1px solid #dbe6f5;
+            border: 1px solid #d1e0f5;
             font-size: 1rem;
             box-sizing: border-box;
         }
@@ -81,34 +83,70 @@
             padding: 10px 12px;
             border-radius: 8px;
             border: none;
-            background: linear-gradient(90deg,#4f46e5,#7c3aed);
-            color: #fff;
+            background: linear-gradient(90deg,#9899e4,#444397);
+            color: #ffffff;
             font-weight: 600;
             cursor: pointer;
             font-size: 1rem;
         }
 
+        /* Rangée au-dessus du bouton (checkbox + lien) */
+        .form-row {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            box-sizing: border-box;
+        }
+        .checkbox {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+            color: #374151;
+        }
+        .checkbox input[type="checkbox"] { width: 16px; height: 16px; }
+        .small-link {
+            color: #be0e0e;
+            text-decoration: none;
+            font-size: 0.95rem;
+        }
+        .small-link:hover { text-decoration: underline; }
+
+
+
         /* Responsive */
         @media (max-width: 420px) {
             #form { padding: 18px; }
+            .logo { height: 90px; }
+            .logo img { max-height: 80px; }
         }
     </style>
 </head>
 <body>
     <div class="center-container">
-        <div class="logo" aria-hidden="false">
-            <!-- Remplacez "logo.png" par le chemin de votre logo ; vous pouvez aussi remplacer ce <img> par du texte ou un SVG -->
-            <img src="logo.png" alt="Logo">
-            <!-- Si vous voulez juste laisser l'espace vide, laissez l'img tel quel (ou supprimez la balise <img>) -->
-        </div>
-
         <div id="form" role="form" aria-labelledby="titre-connexion">
+            <div class="logo" aria-hidden="false">
+                <img src="Toki.png" alt="Logo Toki">
+            </div>
+
             <h1 id="titre-connexion">Connexion</h1>
             <input type="text" placeholder="Nom d'utilisateur" aria-label="Nom d'utilisateur">
             <input type="password" placeholder="Mot de passe" aria-label="Mot de passe">
+
+            <!-- Ajout : rangée au-dessus du bouton -->
+            <div class="form-row">
+                <label class="checkbox">
+                    <input type="checkbox" id="remember" name="remember">
+                    Se souvenir de moi
+                </label>
+                <a class="small-link" href="#" id="forgot">Mot de passe oublié ?</a>
+            </div>
+
             <button type="button">Se connecter</button>
+
         </div>
     </div>
 </body>
 </html>
-// ...existing code...
