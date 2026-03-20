@@ -1,13 +1,12 @@
-from flask import Flask, request, Response,send_file
+from flask import Flask, request, Response,send_from_directory
 from app import db, session
-#from markupsafe import escape
 
 
 flask = Flask(__name__)
 
 @flask.route("/src/<path:file>")
 def src(file):
-    return send_file(f"../frontend/{file}")
+    return send_from_directory("../frontend",file)
 
 
 @flask.route("/app", methods=["GET"])
@@ -17,7 +16,7 @@ def app():
     # Si la cookie 'session_id' est valide
     if (session_id := request.cookies.get('session_id')) and (username := session.check_session(session_id)):
         # Envoyer page html:
-        resp.data = open("./frontend/app/app.html", "r").read()
+        resp.data = open("src/frontend/app/app.html", "r").read()
     else:
         # Redireiger vers page de identification:
         resp.status_code = 302
@@ -27,15 +26,18 @@ def app():
 
 @flask.route("/app/user/<dst_username>/<message>", methods=["POST"])
 def user(dst_username, message):
-# Gestion de chats privees
+    # Gestion de chats privees
+    pass
 
 @flask.route("/app/channel", methods=["POST"])
 def channel():
-# Gestion de salons
+    # Gestion de salons
+    pass
 
 @flask.route("/app/profile", methods=["POST"])
 def profile():
-# Gestion de compte
+    # Gestion de compte
+    pass
 
 @flask.route("/identifier", methods=["GET", "POST"])
 def identifier():
@@ -51,7 +53,7 @@ def identifier():
             resp.status_code = 302
             resp.location = "/identifier"
         else:
-            resp.data = open("./frontend/identifier/conexion.html", "r").read()
+            resp.data = open("src/frontend/identifier/conexion.html", "r").read()
 
     # Si la methode de la requete est POST:
     else:
