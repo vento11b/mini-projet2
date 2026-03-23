@@ -26,8 +26,7 @@ img {
     display: block;
     margin-left: auto;
     margin-right: auto;
-    margin-top: -5px;
-    margin-bottom: 5px;
+    margin-bottom: 5 px;
 }
 h2 {
     color: rgb(36, 144, 158);
@@ -68,4 +67,6 @@ input[type="submit"] {
 p {
     color: rgb(0, 0, 0);
     text-align: center;
+    font-size: 0.9rem;
+    line-height: 1.2;
 }
