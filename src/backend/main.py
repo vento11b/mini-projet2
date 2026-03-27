@@ -13,7 +13,7 @@ def src(file):
 def index():
     resp = Response()
     resp.status_code = 302
-    resp.headers["Location"] = "/inscription"
+    resp.headers["Location"] = "/app"
     return resp
 
 @flask.route("/app", methods=["GET"])
@@ -29,7 +29,8 @@ def app():
     else:
         # Redireiger vers page de identification:
         resp.status_code = 302
-        resp.headers["Location"] = "/identifier"
+        resp.delete_cookie("session_id")
+        resp.headers["Location"] = "/connexion"
 
     return resp
 
