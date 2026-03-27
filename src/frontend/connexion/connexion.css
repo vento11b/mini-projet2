@@ -1,114 +1,72 @@
-html, body {
-    height: 100%;
-    margin: 0;
-    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-    background: #d2e2fc;
-}
 body {
+    background-color: #d2e2fc;
+    margin: 0;
+    min-height: 100vh;
     display: flex;
-    align-items: center;
     justify-content: center;
-    padding: 20px;
+    align-items: center;
+    flex-direction: column;
 }
-
-/* Contrainte du conteneur qui contient la carte */
-.center-container {
+.container {
+    width: 100%;
+    max-width: 450px;
+    padding: 10px 20px 20px;
+    box-sizing: border-box;
+    background: #ffffffcc;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    text-align: center;
+}
+h1 {
+    color: rgb(36, 144, 158);
+    margin-top: 1px;
+    margin-bottom: 15px;
+}
+img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 5 px;
+}
+h2 {
+    color: rgb(36, 144, 158);
+    margin-top: 0;
+}
+label {
+    color: rgb(0, 0, 0);
+    display: block;
+    margin: 0 auto 6px;
+    text-align: left;
     width: 100%;
     max-width: 380px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    box-sizing: border-box;
 }
-
-/* Carte du formulaire */
-#form {
-    width: 100%;
-    background: #ffffff;
-    padding: 24px;
-    border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(15,23,42,0.08);
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    box-sizing: border-box;
-    align-items: center;
-}
-
-/* Espace logo placé DANS la carte */
-.logo {
-    height: 120px;               /* hauteur de l'espace pour le logo à l'intérieur du cadre */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    margin-bottom: 6px;
-}
-.logo img {
-    max-height: 110px;           /* augmente la taille visible du logo */
-    max-width: 100%;
-    object-fit: contain;
-    display: block;
-}
-
-#form h1 {
-    margin: 0 0 6px 0;
-    text-align: center;
-    font-size: 1.25rem;
-    color: #0f172a;
-    width: 100%;
-}
-
-/* Champs et bouton */
 input[type="text"],
+input[type="email"],
 input[type="password"] {
     width: 100%;
-    padding: 10px 12px;
-    border-radius: 8px;
-    border: 1px solid #d1e0f5;
-    font-size: 1rem;
+    max-width: 380px;
+    padding: 8px;
+    margin: 0 auto 15px;
+    display: block;
+    border: 1px solid #bbb;
+    border-radius: 5px;
     box-sizing: border-box;
 }
-
-button {
+input[type="submit"] {
     width: 100%;
-    padding: 10px 12px;
-    border-radius: 8px;
+    max-width: 380px;
+    padding: 10px;
+    margin: 0 auto;
+    display: block;
     border: none;
-    background: linear-gradient(90deg,#9899e4,#444397);
-    color: #ffffff;
-    font-weight: 600;
+    border-radius: 5px;
+    background-color: rgb(36, 144, 158);
+    color: #fff;
     cursor: pointer;
-    font-size: 1rem;
 }
-
-/* Rangée au-dessus du bouton (checkbox + lien) */
-.form-row {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 8px;
-    box-sizing: border-box;
-}
-.checkbox {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.95rem;
-    color: #374151;
-}
-.checkbox input[type="checkbox"] { width: 16px; height: 16px; }
-.small-link {
-    color: #be0e0e;
-    text-decoration: none;
-    font-size: 0.95rem;
-}
-.small-link:hover { text-decoration: underline; }
-
-/* Responsive */
-@media (max-width: 420px) {
-    #form { padding: 18px; }
-    .logo { height: 90px; }
-    .logo img { max-height: 80px; }
+p {
+    color: rgb(0, 0, 0);
+    text-align: center;
+    font-size: 0.9rem;
+    line-height: 1.2;
 }
