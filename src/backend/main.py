@@ -133,12 +133,10 @@ def connexion():
             session_id = session.create_session(username)
             # Creer la cookie
             resp.set_cookie("session_id", session_id)
-            resp.location = "/src/frontend/conversation/conversation.html"
+            resp.location = "/src/frontend/app/app.html"
         else:
             error = {"error": "Le nom d\'utilisateur ou le mot de passe est incorrect"}
             resp.location = "/connexion?"+urlencode(error)
-    
-        #print(users.list_users())
 
     return resp
 

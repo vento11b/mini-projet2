@@ -3,21 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="src/app/style.css">
-    <title>Toki</title>
+    <link rel="stylesheet" href="/src/frontend/app/style.css">
+    <link rel="icon" type="image/png" href="/src/frontend/ressources/Toki-removebg-preview.png">
+    <title>Toki conversation</title>
+
 </head>
+
 <body>
-    <div id="app">
+        <div id="app">
         <div id="chatlist">
-            <div id="chatlist-top"></div>
+            <div id="chatlist-top">
+                <button class="ajouterContact" type ="button">Ajouter un contact</button>
+                <button class="ajouterGroupe" type ="button">+</button>
+
+            </div>
             <div id="chatlist-body"></div>
-            <div id="chatlist-bottom"><p id="username"></p></div>
+            <div id="chatlist-bottom">
+                <h1>user</h1>
+            </div>
         </div>
         <div id="chat">
-            <div id="chat-top"></div>
-            <div id="chat-body"></div>
-            <div id="chat-bottom"></div>
+            <div id="chat-top">
+                <img src="/src/frontend/ressources/Toki-removebg-preview1.png" alt="Logo TOKI" width="90" height="80">
+
+            </div>
+            <div id="chat-body">
+
+            </div>
+            <div id="chat-bottom">
+                <label for="envoyertexte"></label>
+                    <input type="texte" placeholder="Envoyer un message" id="texte" name="texte" required>
+            </div>
         </div>
     </div>
+
 </body>
-</html>
