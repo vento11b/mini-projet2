@@ -10,12 +10,28 @@
 </head>
 
 <body>
-<img src="Toki-removebg-preview1.png" alt="Logo TOKI" width="50" height="50">
+        <div id="app">
+        <div id="chatlist">
+            <div id="chatlist-top">
+                <button class="ajouterContact" type ="button">Ajouter un contact</button>
+                <button class="ajouterGroupe" type ="button">+</button>
 
-<label for="envoyertexte"></label>
-        <input type="texte" id="texte" name="texte" required>
+            </div>
+            <div id="chatlist-body"></div>
+            <div id="chatlist-bottom"></div>
+        </div>
+        <div id="chat">
+            <div id="chat-top">
+                <img src="Toki-removebg-preview1.png" alt="Logo TOKI" width="90" height="80">
+            </div>
+            <div id="chat-body">
 
-<button class="ajouterContact" type ="button">Ajouter un contact</button>
+            </div>
+            <div id="chat-bottom">
+                <label for="envoyertexte"></label>
+                    <input type="texte" placeholder="Envoyer un message" id="texte" name="texte" required>
+            </div>
+        </div>
+    </div>
 
-<button class="ajouterGroupe" type ="button">+</button>
 </body>
