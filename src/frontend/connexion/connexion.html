@@ -3,29 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/png" href="Toki-removebg-preview1.png">
+    <link rel="stylesheet" href="/src/frontend/connexion/style.css">
+    <link rel="icon" type="image/png" href="/src/frontend/ressources/Toki-removebg-preview1.png">
     <title>Toki connexion</title>
 
 </head>
 <body>
     <div class="container">
-        <img src="Toki-removebg-preview1.png" alt="Logo TOKI" width="200" height="150">
+        <img src="/src/frontend/ressources/Toki-removebg-preview1.png" alt="Logo TOKI" width="200" height="150">
         <h1>Connexion</h1>
-        <form action="submit_inscription.php" method="post">
+        <form action="/connexion" method="post">
             <label for="username">Nom d'utilisateur:</label>
             <input type="text" id="username" name="username" required>
 
+            <label for="password">Mot de passe:</label>
+            <input type="password" id="password" name="password" required>
 
-
-        <label for="password">Mot de passe:</label>
-        <input type="password" id="password" name="password" required>
-
-    
-
-        <input type="submit" onclick="window.location.href = '../conversation/conversation.html';" value="Se connecter">
-    </form>
+            <input type="submit" value="Se connecter">
+            <p>Pas inscrit ? <a href="../inscription/inscription.html">S'inscrire</a></p>
+        </form>
     </div>
+    <script>
+        let error = new URLSearchParams(document.location.search).get("error");
+        if (error) {
+            alert(error);
+        }
+    </script>
 </body>
 
 </html>

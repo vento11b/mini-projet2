@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/src/frontend/inscription/style.css">
+    <link rel="icon" type="image/png" href="/src/frontend/ressources/Toki-removebg-preview1.png">
+    <title>Toki Inscription</title>
+
+</head>
+<body>
+    <div class="container">
+        <img src="/src/frontend/ressources/Toki-removebg-preview1.png" alt="Logo TOKI" width="200" height="150">
+        <h1>Inscription</h1>
+        <form id="form" action="/inscription" method="post">
+            <label for="username">Nom d'utilisateur:</label>
+            <input type="text" id="username" name="username" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="password">Mot de passe*:</label>
+            <input type="password" id="password" name="password" required>
+            <p>*8 caractères minimum, 1 majuscule, 1 chiffre, 1 caractère spécial (!@#$%^&*)</p>
+
+
+            <label for="confirm_password">Confirmer le mot de passe:</label>
+            <input type="password" id="confirm_password" name="confirm_password" required>
+            
+
+            <!-- lien pour connecter interface inscription et connexion ci-dessous -->
+            <input type="submit" value="S'inscrire">
+            <p>Déjà inscrit ? <a href="../connexion/connexion.html">Se connecter</a></p>
+        </form>
+    </div>
+    <script>
+        let error = new URLSearchParams(document.location.search).get("error");
+        if (error) {
+            alert(error);
+        }
+
+        //const form = document.getElementById('form');
+        //const password = document.getElementById('password');
+        //const confirmPassword = document.getElementById('confirm_password');
+
+        //form.addEventListener('submit', (e) => {
+        //  confirmPassword.setCustomValidity('');
+        //
+        //  if (password.value !== confirmPassword.value) {
+        //    confirmPassword.setCustomValidity("La confirmation ne correspond pas au mot de passe");
+        //    confirmPassword.reportValidity();
+        //    e.preventDefault();
+        //  }
+        //});
+    </script>
+</body>
+
+</html>

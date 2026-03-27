@@ -1,10 +1,11 @@
 from flask import Flask, request, Response,send_from_directory
 from app import users, session
-from urllib import urlencode
+#from urllib import urlencode # -> python2 
+from urllib.parse import urlencode # -> python3
 
 flask = Flask(__name__)
 
-@flask.route("/src/<path:file>")
+@flask.route("/src/frontend/<path:file>")
 def src(file):
     return send_from_directory("../frontend",file)
 
@@ -48,6 +49,7 @@ def profile():
     pass
 
 @flask.route("/inscription", methods=["GET", "POST"])
+@flask.route("/inscription/inscription.html", methods=["GET", "POST"])
 def inscription():
     resp = Response()
     # Si la methode de la requete est GET:
@@ -69,7 +71,7 @@ def inscription():
         resp.status_code = 302
 
         # Recevoir les donnes pour l'inscription:
-        username, password = request.form.get("username").encode('ascii'), request.form.get("password").encode('ascii')
+        username, password = request.form.get("username"), request.form.get("password")
         print(username, password)
 
         if users.check_password(password):
@@ -101,6 +103,7 @@ def inscription():
     return resp
 
 @flask.route("/connexion", methods=["GET", "POST"])
+@flask.route("/connexion/connexion.html", methods=["GET", "POST"])
 def connexion():
     resp = Response()
     # Si la methode de la requete est GET:
@@ -122,20 +125,20 @@ def connexion():
         resp.status_code = 302
 
         # Recevoir les donnes pour l'inscription:
-        username, password = request.form.get("username").encode('ascii'), request.form.get("password").encode('ascii')
-        print(username, password)
+        username, password = request.form.get("username"), request.form.get("password")
+        print(username,password)
 
-        if users.check_credentials():
+        if users.check_credentials(username, password):
             # Creer une session
             session_id = session.create_session(username)
             # Creer la cookie
             resp.set_cookie("session_id", session_id)
-            resp.location = "/1"
+            resp.location = "/src/frontend/conversation/conversation.html"
         else:
             error = {"error": "Le nom d\'utilisateur ou le mot de passe est incorrect"}
             resp.location = "/connexion?"+urlencode(error)
     
-        print(users.list_users())
+        #print(users.list_users())
 
     return resp
 
