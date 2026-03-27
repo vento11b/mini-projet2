@@ -1,6 +1,6 @@
 from flask import Flask, request, Response,send_from_directory
 from app import users, session
-
+from urllib import urlencode
 
 flask = Flask(__name__)
 
@@ -8,13 +8,21 @@ flask = Flask(__name__)
 def src(file):
     return send_from_directory("../frontend",file)
 
+@flask.route("/")
+def index():
+    resp = Response()
+    resp.status_code = 302
+    resp.headers["Location"] = "/inscription"
+    return resp
 
 @flask.route("/app", methods=["GET"])
 def app():
     resp = Response()
     
     # Si la cookie 'session_id' est valide
-    if (session_id := request.cookies.get('session_id')) and (username := session.check_session(session_id)):
+    session_id = request.cookies.get('session_id')
+    username = session.check_session(session_id)
+    if session_id and username:
         # Envoyer page html:
         resp.data = open("src/frontend/app/app.html", "r").read()
     else:
@@ -34,7 +42,7 @@ def channel():
     # Gestion de salons
     pass
 
-@flask.route("/app/profile", methods=["POST"])
+@flask.route("/app/profil", methods=["POST"])
 def profile():
     # Gestion de compte
     pass
@@ -42,94 +50,95 @@ def profile():
 @flask.route("/inscription", methods=["GET", "POST"])
 def inscription():
     resp = Response()
-    
     # Si la methode de la requete est GET:
     if request.method == "GET":
 
         # Envoyer page HTML
-        if session_id := request.cookies.get("session_id"):
+        session_id = request.cookies.get("session_id")
+        if session_id:
             # Si la cookie 'session_id' est valide, redireiger vers l'application:
 
             resp.status_code = 302
             resp.location = "/app"
         else:
-            resp.data = open("src/frontend/inscription.html", "r").read()
+            resp.data = open("src/frontend/inscription/inscription.html", "r").read()
 
     # Si la methode de la requete est POST:
     else:
-        resp.data = {'status': 0, 'info': ''}
         resp.content_type = "application/json"
         resp.status_code = 302
 
         # Recevoir les donnes pour l'inscription:
-        username, password = request.json["username"], request.json["password"]
-            
-        if users.check_password():
-            if users.check_username():
+        username, password = request.form.get("username").encode('ascii'), request.form.get("password").encode('ascii')
+        print(username, password)
+
+        if users.check_password(password):
+            if users.check_username(username):
                 # Creer utilisateur
                 if users.create_user(username, password):
                     ## Creer une session
                     #session_id = session.create_session(username)
                     ## Creer la cookie
                     #resp.set_cookie("session_id", session_id)
-                    resp.data = {'status': 0, 'info': 'Compte cree.'}
-                    resp.location = "/1"
+                    print("success")
+                    resp.location = "/connexion"
+
                 else:
-                    resp.data = {'status': 0, 'info': 'Error dans la creation du compte'}
-                    resp.location = "/inscription"
+                    print("error")
+                    error = {"error": "Erreur inconnue"}
+                    resp.location = "/inscription?"+urlencode(error)
             else:
-                resp.data = {'status': 0, 'info': 'Le nom d\'utilisateur n\'est pas disponible.'}
-                resp.location = "/inscription"
+                print("error user unavailable")
+                error = {"error": "L'utilisateur existe deja"}
+                resp.location = "/inscription?"+urlencode(error)
         else:
-            resp.data = {'status': 0, 'info': 'Le mot de passe ne remplit pas les conditions.'}
-            resp.location = "/inscription"
+            print("error incompatible password")
+            error = {"error": "Le mot de passe ne remplit pas les conditions"}
+            resp.location = "/inscription?"+urlencode(error)
     
-    resp.data = str(resp.data).encode()
-    
+        print(users.list_users())
+
     return resp
 
 @flask.route("/connexion", methods=["GET", "POST"])
 def connexion():
-    return
     resp = Response()
-
-    # Creer une session
-    session_id = session.create_session(username)
-    # Creer la cookie
-    resp.set_cookie("session_id", session_id)
     # Si la methode de la requete est GET:
-
     if request.method == "GET":
 
-        
-        if session_id := request.cookies.get("session_id"):
+        # Envoyer page HTML
+        session_id = request.cookies.get("session_id")
+        if session_id:
             # Si la cookie 'session_id' est valide, redireiger vers l'application:
 
             resp.status_code = 302
-            resp.location = "/connexion"
+            resp.location = "/app"
         else:
-            # Sinon envoyer page HTML
-            resp.data = open("src/frontend/connexion.html", "r").read()
+            resp.data = open("src/frontend/connexion/connexion.html", "r").read()
 
     # Si la methode de la requete est POST:
     else:
-        
-        # Recevoir les donnes pour conexion/inscription:
-        username, password = request.json["username"], request.json["password"]
-        if db.validate_user(username, password):
-            # Si utilisateur et mot de passe sont corrects:
-            
+        resp.content_type = "application/json"
+        resp.status_code = 302
+
+        # Recevoir les donnes pour l'inscription:
+        username, password = request.form.get("username").encode('ascii'), request.form.get("password").encode('ascii')
+        print(username, password)
+
+        if users.check_credentials():
             # Creer une session
             session_id = session.create_session(username)
-            resp.data = b"{'status': 1}"
-            resp.content_type = "application/json"
-
             # Creer la cookie
             resp.set_cookie("session_id", session_id)
+            resp.location = "/1"
         else:
-            resp.data = b"{'status': 0}"
-            resp.content_type = "application/json"
+            error = {"error": "Le nom d\'utilisateur ou le mot de passe est incorrect"}
+            resp.location = "/connexion?"+urlencode(error)
+    
+        print(users.list_users())
+
     return resp
 
 if __name__ == '__main__':
+    flask.debug = True
     flask.run()
