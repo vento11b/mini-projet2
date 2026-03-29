@@ -1,5 +1,7 @@
 from flask import Flask, request, Response,send_from_directory
-from app import users, session
+from app import appdb, session
+import json
+
 #from urllib import urlencode # -> python2 
 from urllib.parse import urlencode # -> python3
 
@@ -22,7 +24,7 @@ def app():
     
     # Si la cookie 'session_id' est valide
     session_id = request.cookies.get('session_id')
-    username = session.check_session(session_id)
+    username = session.check(session_id)
     if session_id and username:
         # Envoyer page html:
         resp.data = open("src/frontend/app/app.html", "r").read()
@@ -34,20 +36,52 @@ def app():
 
     return resp
 
-@flask.route("/app/user/<dst_username>/<message>", methods=["POST"])
-def user(dst_username, message):
+@flask.route("/app/envoyer/<dst_username>/<message>", methods=["POST"])
+def utilisateur(dst_username, message):
     # Gestion de chats privees
     pass
 
-@flask.route("/app/channel", methods=["POST"])
-def channel():
-    # Gestion de salons
-    pass
 
-@flask.route("/app/profil", methods=["POST"])
-def profile():
-    # Gestion de compte
-    pass
+@flask.route("/app/compte", methods=["POST"])
+def compte():
+    session_id = request.cookies.get('session_id')
+    username = session.check(session_id)
+    if session_id and username:
+        return {"status": 1, "info": [managedb.get_friends(username), managedb.get_channels(username)]}
+    else:
+        return {"status": 0, "info": "Le cookie est manquant ou incorrect"}
+
+@flask.route("/app/amis", methods=["POST"])
+def friends():
+    session_id = request.cookies.get('session_id')
+    username = session.check(session_id)
+    if session_id and username:
+        return {"status": 1, "info": managedb.get_friends(username)}
+    else:
+        return {"status": 0, "info": "Le cookie est manquant ou incorrect"}
+
+@flask.route("/app/ajouter/<friend>", methods=["POST"])
+def add_friend(friend):
+    print(session.get_all())
+    session_id = request.cookies.get('session_id')
+    username = session.check(session_id)
+    if session_id and username:
+        if managedb.add_friend(username, friend)!=0:
+            return {"status": 0, "info": "Ami ajoute"}
+        else:
+            return {"status": 0, "info": "Impossible d'ajouter un ami"}
+    else:
+        return {"status": 0, "info": "Le cookie est manquant ou incorrect"}
+
+@flask.route("/app/deconnexion", methods=["POST"])
+def deconnexion():
+    session_id = request.cookies.get('session_id')
+    username = session.check(session_id)
+    if session_id and username:
+        session.remove(session_id)
+    #print(session.get_all(), request.cookies.get('session_id')!=None)
+    return {"status": request.cookies.get('session_id')==None}
+
 
 @flask.route("/inscription", methods=["GET", "POST"])
 @flask.route("/inscription/inscription.html", methods=["GET", "POST"])
@@ -75,12 +109,12 @@ def inscription():
         username, password = request.form.get("username"), request.form.get("password")
         print(username, password)
 
-        if users.check_password(password):
-            if users.check_username(username):
+        if managedb.check_password(password):
+            if managedb.check_username(username):
                 # Creer utilisateur
-                if users.create_user(username, password):
+                if managedb.add_user(username, password):
                     ## Creer une session
-                    #session_id = session.create_session(username)
+                    #session_id = session.create(username)
                     ## Creer la cookie
                     #resp.set_cookie("session_id", session_id)
                     print("success")
@@ -99,13 +133,15 @@ def inscription():
             error = {"error": "Le mot de passe ne remplit pas les conditions"}
             resp.location = "/inscription?"+urlencode(error)
     
-        print(users.list_users())
+        print(managedb.list_users())
 
     return resp
 
 @flask.route("/connexion", methods=["GET", "POST"])
 @flask.route("/connexion/connexion.html", methods=["GET", "POST"])
 def connexion():
+    print(managedb.add_friend("vento", "caca"))
+    print(managedb.add_friend("cac`fa", "vento"))
     resp = Response()
     # Si la methode de la requete est GET:
     if request.method == "GET":
@@ -129,16 +165,16 @@ def connexion():
         username, password = request.form.get("username"), request.form.get("password")
         print(username,password)
 
-        if users.check_credentials(username, password):
+        if managedb.check_credentials(username, password):
             # Creer une session
-            session_id = session.create_session(username)
+            session_id = session.create(username)
             # Creer la cookie
             resp.set_cookie("session_id", session_id)
-            resp.location = "/src/frontend/app/app.html"
+            resp.location = "/app"
         else:
             error = {"error": "Le nom d\'utilisateur ou le mot de passe est incorrect"}
             resp.location = "/connexion?"+urlencode(error)
-
+    print(session.get_all())
     return resp
 
 if __name__ == '__main__':
