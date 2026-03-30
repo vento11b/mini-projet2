@@ -103,6 +103,9 @@ def reset_db():
     cursor.execute("DROP TABLE IF EXISTS channel_members;")
     cursor.execute("CREATE TABLE channel_members(channel TEXT , username TEXT , role TEXT , PRIMARY KEY (channel, username), FOREIGN KEY(channel) REFERENCES channels(name));")
     
+    cursor.execute("DROP TABLE IF EXISTS channel_messages;")
+    cursor.execute("CREATE TABLE channel_messages(channel TEXT , username TEXT , timestamp TEXT, PRIMARY KEY (channel, username, timestamp));")
+    
     conn.commit()
 
     debug("db reseted.")

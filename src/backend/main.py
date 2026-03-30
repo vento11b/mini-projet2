@@ -110,7 +110,7 @@ def inscription():
         print(username, password)
 
         if appdb.check_password(password):
-            if appdb.check_username(username):
+            if appdb.username_exist(username):
                 # Creer utilisateur
                 if appdb.add_user(username, password):
                     ## Creer une session
@@ -133,7 +133,7 @@ def inscription():
             error = {"error": "Le mot de passe ne remplit pas les conditions"}
             resp.location = "/inscription?"+urlencode(error)
     
-        print(appdb.list_users())
+        print(appdb.get_usernames())
 
     return resp
 
