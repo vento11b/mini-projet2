@@ -2,8 +2,8 @@ from flask import Flask, request, Response,send_from_directory
 from app import appdb, session
 import json
 
-#from urllib import urlencode # -> python2 
-from urllib.parse import urlencode # -> python3
+from urllib import urlencode # -> python2 
+#from urllib.parse import urlencode # -> python3
 
 flask = Flask(__name__)
 
@@ -47,7 +47,7 @@ def compte():
     session_id = request.cookies.get('session_id')
     username = session.check(session_id)
     if session_id and username:
-        return {"status": 1, "info": [managedb.get_friends(username), managedb.get_channels(username)]}
+        return {"status": 1, "info": [appdb.get_friends(username), appdb.get_channels(username)]}
     else:
         return {"status": 0, "info": "Le cookie est manquant ou incorrect"}
 
@@ -56,7 +56,7 @@ def friends():
     session_id = request.cookies.get('session_id')
     username = session.check(session_id)
     if session_id and username:
-        return {"status": 1, "info": managedb.get_friends(username)}
+        return {"status": 1, "info": appdb.get_friends(username)}
     else:
         return {"status": 0, "info": "Le cookie est manquant ou incorrect"}
 
@@ -66,7 +66,7 @@ def add_friend(friend):
     session_id = request.cookies.get('session_id')
     username = session.check(session_id)
     if session_id and username:
-        if managedb.add_friend(username, friend)!=0:
+        if appdb.add_friend(username, friend)!=0:
             return {"status": 0, "info": "Ami ajoute"}
         else:
             return {"status": 0, "info": "Impossible d'ajouter un ami"}
@@ -109,10 +109,10 @@ def inscription():
         username, password = request.form.get("username"), request.form.get("password")
         print(username, password)
 
-        if managedb.check_password(password):
-            if managedb.check_username(username):
+        if appdb.check_password(password):
+            if appdb.check_username(username):
                 # Creer utilisateur
-                if managedb.add_user(username, password):
+                if appdb.add_user(username, password):
                     ## Creer une session
                     #session_id = session.create(username)
                     ## Creer la cookie
@@ -133,15 +133,13 @@ def inscription():
             error = {"error": "Le mot de passe ne remplit pas les conditions"}
             resp.location = "/inscription?"+urlencode(error)
     
-        print(managedb.list_users())
+        print(appdb.list_users())
 
     return resp
 
 @flask.route("/connexion", methods=["GET", "POST"])
 @flask.route("/connexion/connexion.html", methods=["GET", "POST"])
 def connexion():
-    print(managedb.add_friend("vento", "caca"))
-    print(managedb.add_friend("cac`fa", "vento"))
     resp = Response()
     # Si la methode de la requete est GET:
     if request.method == "GET":
@@ -165,7 +163,7 @@ def connexion():
         username, password = request.form.get("username"), request.form.get("password")
         print(username,password)
 
-        if managedb.check_credentials(username, password):
+        if appdb.check_credentials(username, password):
             # Creer une session
             session_id = session.create(username)
             # Creer la cookie
