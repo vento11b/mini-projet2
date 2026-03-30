@@ -98,3 +98,15 @@ body, html {
     margin-left: 15px;
     margin-top: 18px
 }
+
+#compte {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 150px;
+    height: 35px;
+    color: white;
+    border-radius: 50%;
+    padding: 0 125px;
+    margin-top: 15px;
+}
