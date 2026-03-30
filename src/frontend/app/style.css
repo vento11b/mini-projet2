@@ -82,6 +82,9 @@ body, html {
     color: white;
     padding-left: 150px;
     padding-top: 40px;
+    .newgroup {
+        margin-left:15px;
+    }
 }
 
 #chat-logo {
