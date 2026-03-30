@@ -18,13 +18,12 @@ def index():
 @flask.before_request
 def allapp():
     if request.path.startswith('/app'):
-        session_id = request.cookies.get('session_id')
-        username = session.check(session_id)
-        if not (session_id and username):
+        g.session_id = request.cookies.get('session_id')
+        g.username = session.check(g.session_id)
+        
+        if not (g.session_id and g.username):
             if request.path=="/app":
                 return redirect('/connexion')
-            g.username = username
-            g.session_id = session_id
             return {"status": 0, "info": "Le cookie est manquant ou incorrect"}
 
 @flask.route("/app", methods=["GET"])
@@ -34,92 +33,57 @@ def app():
 @flask.route("/app/ami/envoyer/<friend>/<message>", methods=["POST"])
 def send_friend(friend, message):
     # Gestion de chats privees
-    session_id, username = request.cookies.get('session_id'), session.check(session_id)
-    if session_id and username:
-        resp = appdb.send_private(username, friend, message)
-        return {"status": resp[0], "info": resp[1]}
-    else:
-        {"status": 0, "info": "Le cookie est manquant ou incorrect"}
+    resp = appdb.send_private(g.username, friend, message)
+    return {"status": resp[0], "info": resp[1]}
 
 @flask.route("/app/ami/messages/<friend>", methods=["POST"])
 def get_private_mesages(friend):
     # Gestion de chats privees
-    session_id, username = request.cookies.get('session_id'), session.check(session_id)
-    if session_id and username:
-        resp = appdb.get_private_chat_history(username, friend)
-        return {"status": resp[0], "info": resp[1]}
-    else:
-        {"status": 0, "info": "Le cookie est manquant ou incorrect"}
+    resp = appdb.get_private_chat_history(g.username, friend)
+    return {"status": resp[0], "info": resp[1]}
 
 @flask.route("/app/salon/envoyer/<channel>/<message>", methods=["POST"])
 def send_channel(channel, message):
     # Gestion de salons
-    session_id, username = request.cookies.get('session_id'), session.check(session_id)
-    if session_id and username:
-        resp = appdb.send_channel(username, channel, message)
-        return {"status": resp[0], "info": resp[1]}
-    else:
-        {"status": 0, "info": "Le cookie est manquant ou incorrect"}
+    resp = appdb.send_channel(g.username, channel, message)
+    return {"status": resp[0], "info": resp[1]}
 
 @flask.route("/app/salon/messages/<channel>", methods=["POST"])
 def get_channel_messages(channel):
     # Gestion de chats privees
-    session_id, username = request.cookies.get('session_id'), session.check(session_id)
-    if session_id and username:
-        resp = appdb.get_channel_chat_history(channel)
-        return {"status": resp[0], "info": resp[1]}
-    else:
-        {"status": 0, "info": "Le cookie est manquant ou incorrect"}
+    resp = appdb.get_channel_chat_history(channel)
+    return {"status": resp[0], "info": resp[1]}
 
 @flask.route("/app/info", methods=["POST"])
 def info():
-    return {"status": 1, "info": {"username": username, "amis": appdb.get_friends(username)[1], "requetes amis": appdb.get_friend_requests(username)[1], "salons": appdb.get_user_channels(username)[1]}}
-
+    resp = {"username": g.username, "amis": appdb.get_friends(g.username)[1], "requetes amis": appdb.get_friend_requests(g.username)[1], "salons": appdb.get_user_channels(g.username)[1]}
+    return {"status": 1, "info": resp}
 
 @flask.route("/app/amis", methods=["POST"])
 def get_friends():
-    session_id, username = request.cookies.get('session_id'), session.check(session_id)
-    if session_id and username:
-        return {"status": 1, "data": appdb.get_friends(username)}
-    else:
-        return {"status": 0, "info": "Le cookie est manquant ou incorrect"}
+    resp = appdb.get_friends(g.username)
+    return {"status": resp[0], "info": resp[1]}
 
 @flask.route("/app/salons", methods=["POST"])
 def get_channels():
-    session_id, username = request.cookies.get('session_id'), session.check(session_id)
-    if session_id and username:
-        return {"status": 1, "data": appdb.get_user_channels(username)}
-    else:
-        return {"status": 0, "info": "Le cookie est manquant ou incorrect"}
+    resp = appdb.get_user_channels(g.username)
+    return {"status": resp[0], "info": resp[1]}
 
 @flask.route("/app/ajouter/<friend>", methods=["POST"])
 def add_friend(friend):
-    session_id, username = request.cookies.get('session_id'), session.check(session_id)
-    if session_id and username:
-        if appdb.add_friend(username, friend)!=0:
-            return {"status": 1, "info": "Ami ajoute"}
-        else:
-            return {"status": 0, "info": "Impossible d'ajouter un ami"}
-    else:
-        return {"status": 0, "info": "Le cookie est manquant ou incorrect"}
+    resp =  appdb.add_friend(g.username, friend)
+    return {"status": resp[0], "info": resp[1]}
 
 @flask.route("/app/joindre/<channel>", methods=["POST"])
 def join_channel(channel):
-    session_id, username = request.cookies.get('session_id'), session.check(session_id)
-    if session_id and username:
-        resp = appdb.join_channel(username, channel)
-        return {"status": resp[0], "info": resp[1]}
-    else:
-        return {"status": 0, "info": "Le cookie est manquant ou incorrect"}
+    resp = appdb.join_channel(g.username, channel)
+    return {"status": resp[0], "info": resp[1]}
 
 
 @flask.route("/app/deconnexion", methods=["POST"])
 def deconnexion():
-    session_id, username = request.cookies.get('session_id'), session.check(session_id)
-    if session_id and username:
-        session.remove(session_id)
-        return {"status": 1, "data": request.cookies.get('session_id')==None}
-    return {"status": 0, "info": "Le cookie est manquant ou incorrect"}
+    session.remove(g.session_id)
+    return {"status": request.cookies.get('session_id')==None, "info": ""}
 
 
 @flask.route("/inscription", methods=["GET", "POST"])
