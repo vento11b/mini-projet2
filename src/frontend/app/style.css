@@ -54,3 +54,15 @@ body, html {
     flex: 2;
     background-color: gold;
 }
+
+.message.sent {
+    background: #000000;
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 15px;
+    margin: 5px 0;
+    align-self: flex-end;
+    max-width: 60%;
+    word-break: break-word;
+    display: block;
+}
