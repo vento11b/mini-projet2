@@ -5,140 +5,64 @@ body, html {
 
 #app {
     display: flex;
+    gap: 5px;
     height: 100vh;
     width: 100vw;
+    background-color: black;
 }
 
 #chatlist {
-    flex: 1;
     display: flex;
     flex-direction: column;
+    flex: 1;
+    gap: 5px;
     height: 100%;
-    background-color: crimson;
-    border-right: 3px  solid black;
+    background-color: black;
+    /* background-color: crimson; */
 }
 
 #chat {
-    flex: 3;
     display: flex;
     flex-direction: column;
+    flex: 5;
+    gap: 5px;
     height: 100%;
-    background-color: hotpink;
+    background-color: black;
+    /* background-color: hotpink; */
 }
 
 #chatlist-top {
     flex: 3;
     background-color: rgb(166, 185, 236);
-        border-bottom: 3px  solid black;
+    /* background-color: aquamarine; */
 }
 
 #chatlist-body {
     flex: 18;
     background-color: rgb(200, 159, 238);
-        border-bottom: 3px  solid black;
+    /* background-color: blueviolet; */
 }
 
 #chatlist-bottom {
     flex: 2;
     background-color: rgb(255, 255, 255);
+    /* background-color: beige; */
 }
 
 #chat-top {
     flex: 3;
     background-color: rgb(214, 232, 255);
-        border-bottom: 3px  solid black;
+    /* background-color: chocolate; */
 }
 
 #chat-body {
     flex: 18;
     background-color: cornflowerblue;
-    border-bottom: 3px  solid black;
+    /* background-color: cornflowerblue; */
 }
 
 #chat-bottom {
     flex: 2;
     background-color: rgb(214, 232, 255);
-}
-
-
-.message.sent {
-    background: #d2e2fc;
-    color: #000000;
-    padding: 8px 12px;
-    border-radius: 15px;
-    margin: 5px 0;
-    align-self: flex-start;
-    max-width: 60%;
-    word-break: break-word;
-    display: block;
-}
-
-#add_contact {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 150px;
-    height: 35px;
-    color: white;
-    padding-left: 150px;
-    padding-top: 40px;
-    .newgroup {
-        margin-left:15px;
-    }
-}
-
-#chat-logo {
-    display: flex;
-    align-items: right;
-    justify-content: right;
-    width: 1450px;
-    height: 100px;
-    margin-top: 10px;
-
-}
-
-#message_input {
-    width: 80%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin-right: 10px;
-    margin-left: 15px;
-    margin-top: 18px
-}
-
-#compte {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 150px;
-    height: 35px;
-    color: white;
-    border-radius: 50%;
-    padding: 0 125px;
-    margin-top: 20px;
-}
-
-#chat-body {
-    height: 350px;         /* Choisis la hauteur qui te convient */
-    overflow-y: auto;      /* Active le scroll vertical */
-    display: flex;
-    flex-direction: column ;
-    padding: 10px;
-    
-}
-
-
-#message_list {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-
-.msg-username {
-    font-weight: bold;
-    margin-right: 8px;
-    color: #000000;
-    font-size: 0.95em;
+    /* background-color: gold; */
 }

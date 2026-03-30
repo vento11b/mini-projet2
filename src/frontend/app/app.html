@@ -12,10 +12,10 @@
         <div id="chatlist">
             <div id="chatlist-top">
                 <div id="add_contact">
-                    <input type="text" class="newcontact" placeholder="Ajouter contact">
-                    <button>+</button>
+                    <input type="text" id="addfriend" class="newcontact" placeholder="Ajouter ami">
+                    <button onclick="add_friend(document.getElementById('addfriend').value)">+</button>
                     <br>
-                    <input type="text" class="newgroup" placeholder="Ajouter groupe">
+                    <input type="text" class="newcontact" placeholder="Ajouter groupe">
                     <button>+</button>
                 </div>
             </div>
@@ -24,19 +24,16 @@
             </div>
             <div id="chatlist-bottom">
                 <div id="compte">
-                    <span id="username" data-username="MonNom"></span>
-                    <button onclick="deconnexion()">Déconnexion</button>
+                    <span id="username"></span>
+                    <button onclick="deconnexion()">deconexion</button>
                 </div>
             </div>
         </div>
-
+        
         <div id="chat">
             <div id="chat-top">
                 <div id="chat-info">
-
-                </div>
-                <div id="chat-logo">
-                    <img src="/src/frontend/ressources/Toki-removebg-preview1.png" alt="Logo">
+                    
                 </div>
             </div>
             <div id="chat-body">
@@ -44,14 +41,12 @@
             </div>
             <div id="chat-bottom">
                 <div id="input">
-    <input type="text" id="message_input" placeholder="Envoyer message">
-    <button id="send_button">Envoyer</button>
-</div>
+                    <input type="text" id="" placeholder="Envoyer texte">
+                    <button>Envoyer</button>
                 </div>
             </div>
         </div>
     </div>
     <script defer src="/src/frontend/app/loadDOM.js"></script>
-
 </body>
 </html>

@@ -196,11 +196,15 @@ if __name__ == "__main__":
     else:
         reset_db()
         DEFAULT_CONDITIONS = [lambda x: 1]
-        add_user("user1", "aa")
-        add_user("user2", "aa")
-        add_user("user3", "aa")
-        add_user("user4", "aa")
-        add_user("user5", "aa")
-        add_friend("user2", "user1")
-        join_channel("user1", "channel1")
-        join_channel("user2", "channel1")
+
+add_user("vento", "a")
+add_user("user1", "aa")
+add_user("user2", "aa")
+add_user("user3", "aa")
+add_user("user4", "aa")
+add_user("user5", "aa")
+add_friend("vento", "user2")
+add_friend("vento", "user1")
+add_friend("user1", "vento")
+join_channel("user1", "channel1")
+join_channel("user2", "channel1")
