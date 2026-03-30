@@ -117,3 +117,18 @@ body, html {
     padding: 0 125px;
     margin-top: 15px;
 }
+
+#chat-body {
+    height: 350px;         /* Choisis la hauteur qui te convient */
+    overflow-y: auto;      /* Active le scroll vertical */
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    background: #f5f8fa;   /* Optionnel : couleur de fond */
+}
+
+#message_list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
