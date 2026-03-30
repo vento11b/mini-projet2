@@ -34,14 +34,17 @@ function add_friend(friend) {
 function envoyerMessage() {
     const messageInput = document.getElementById('message_input');
     const messageList = document.getElementById('message_list');
+    const usernameSpan = document.getElementById('username');
+    const username = usernameSpan.textContent.trim() || "Moi"; // Valeur par défaut si vide
     const text = messageInput.value.trim();
     if (text !== "") {
         const msgDiv = document.createElement('div');
         msgDiv.className = 'message sent';
-        msgDiv.textContent = text;
+        // Ajoute le username à côté du message
+        msgDiv.innerHTML = `<span class="msg-username">${username} :</span> <span class="msg-text">${text}</span>`;
         messageList.appendChild(msgDiv);
         messageInput.value = "";
-        messageList.scrollTop = messageList.scrollHeight;
+        messageList.parentElement.scrollTop = messageList.parentElement.scrollHeight;
     }
 }
 
@@ -52,17 +55,4 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-function envoyerMessage() {
-    const messageInput = document.getElementById('message_input');
-    const messageList = document.getElementById('message_list');
-    const text = messageInput.value.trim();
-    if (text !== "") {
-        const msgDiv = document.createElement('div');
-        msgDiv.className = 'message sent';
-        msgDiv.textContent = text;
-        messageList.appendChild(msgDiv);
-        messageInput.value = "";
-        // Scroll automatique vers le bas
-        messageList.parentElement.scrollTop = messageList.parentElement.scrollHeight;
-    }
-}
+
