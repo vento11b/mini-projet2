@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/src/frontend/app/style.css">
+    <script defer src="/src/frontend/app/script.js"></script>
+    <title>Toki</title>
+</head>
+<body>
+    <div id="app">
+        <div id="chatlist">
+            <div id="chatlist-top">
+                <div id="add_contact">
+                    <input type="text" class="newcontact" placeholder="Ajouter ami">
+                    <button>+</button>
+                    <br>
+                    <input type="text" class="newcontact" placeholder="Ajouter groupe">
+                    <button>+</button>
+                </div>
+            </div>
+            <div id="chatlist-body">
+                <div id="contact_list"></div>
+            </div>
+            <div id="chatlist-bottom">
+                <div id="compte">
+                    <span id="username"></span>
+                    <button onclick="deconnexion()">deconexion</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="chat">
+            <div id="chat-top">
+                <div id="chat-info">
+
+                </div>
+            </div>
+            <div id="chat-body">
+                <div id="message_list"></div>
+            </div>
+            <div id="chat-bottom">
+                <div id="input">
+                    <input type="text" id="" placeholder="Envoyer texte">
+                    <button>Envoyer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

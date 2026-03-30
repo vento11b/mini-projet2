@@ -17,8 +17,6 @@ conn = sqlite3.connect(DB_FILE, check_same_thread=False)
 def debug(*args, **kwargs):
     if DEBUG: print(args, kwargs)
 
-
-
 def check_credentials(username, password):
     cursor = conn.cursor()
     cursor.execute("SELECT username, password FROM users WHERE username = ? AND password = ?", (username, hashlib.sha256(password.encode()).hexdigest()))    
@@ -138,18 +136,18 @@ def get_channel_chat_history(channel):
         return (0, er)
     return (1, [message for message in cursor.fetchall()])
 
-def send_private(username, friend, message):
+def send_friend(username, friend, message):
     cursor = conn.cursor()
     try:
         if friend in get_friends(username):
             cursor.execute("INSERT INTO private_messages (private_room, username, message, timestamp) VALUES (?, ?, ?,  datetime('now'));", ("".join(sorted([username, friend])), username, message))
             conn.commit()
         else:
-            return 0
+            return (0, er)
     except sqlite3.Error as er:
         return (0, er)
     
-    return (0, "")
+    return (1, "")
 
 def send_channel(username, channel, message):
     cursor = conn.cursor()
