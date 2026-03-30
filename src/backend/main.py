@@ -42,12 +42,12 @@ def utilisateur(dst_username, message):
     pass
 
 
-@flask.route("/app/compte", methods=["POST"])
-def compte():
+@flask.route("/app/info", methods=["POST"])
+def info():
     session_id = request.cookies.get('session_id')
     username = session.check(session_id)
     if session_id and username:
-        return {"status": 1, "info": [appdb.get_friends(username), appdb.get_channels(username)]}
+        return {"status": 1, "info": {"username": username, "amis": appdb.get_friends(username)[1], "requetes amis": appdb.get_friend_requests(username)[1], "salons": appdb.get_user_channels(username)[1]}}
     else:
         return {"status": 0, "info": "Le cookie est manquant ou incorrect"}
 

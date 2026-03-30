@@ -6,24 +6,22 @@ function fetchjson(url) {
 
 
 function deconnexion() {
-    fetch('/app/deconnexion').then(data => {
-        console.log(data);
-    });
-    
-}
-
-function get_compte() {
-    fetch('/app/compte', {method: 'POST'}).then(resp => resp.json()).then(data =>{
-        console.log(data);
+    fetch('/app/deconnexion', {method: 'POST'}).then(resp => resp.json()).then(data =>{
+        window.location.href = "/connexion";
     });
 }
 
-
-function get_friends() {
+function add_contact_friend() {
     fetch('/app/amis', {method: 'POST'}).then(resp => resp.json()).then(data =>{
         console.log(data);
     });
+
 }
+
+function add_contact_channel() {
+
+}
+
 
 function add_friend(friend) {
     fetch('/app/ajouter/'+friend, {method: 'POST'}).then(resp => resp.json()).then(data =>{
