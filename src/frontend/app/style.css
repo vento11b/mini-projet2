@@ -28,24 +28,24 @@ body, html {
 
 #chatlist-top {
     flex: 3;
-    background-color: aquamarine;
+    background-color: rgb(166, 185, 236);
         border-bottom: 3px  solid black;
 }
 
 #chatlist-body {
     flex: 18;
-    background-color: blueviolet;
+    background-color: rgb(200, 159, 238);
         border-bottom: 3px  solid black;
 }
 
 #chatlist-bottom {
     flex: 2;
-    background-color: beige;
+    background-color: rgb(255, 255, 255);
 }
 
 #chat-top {
     flex: 3;
-    background-color: chocolate;
+    background-color: rgb(214, 232, 255);
         border-bottom: 3px  solid black;
 }
 
@@ -57,7 +57,7 @@ body, html {
 
 #chat-bottom {
     flex: 2;
-    background-color: gold;
+    background-color: rgb(214, 232, 255);
 }
 
 
@@ -117,4 +117,3 @@ body, html {
     padding: 0 125px;
     margin-top: 15px;
 }
-
