@@ -55,7 +55,7 @@ body, html {
     background-color: gold;
 }
 
-<<<<<<< HEAD
+
 .message.sent {
     background: #000000;
     color: #fff;
@@ -66,7 +66,8 @@ body, html {
     max-width: 60%;
     word-break: break-word;
     display: block;
-=======
+}
+
 #addcontact {
     display: flex;
     align-items: center;
@@ -85,5 +86,5 @@ body, html {
     width: 1450px;
     height: 100px;
     margin-top: 10px;
->>>>>>> a3e4566c32865d51d77698d907c01d2ae843ec3c
+
 }
