@@ -52,4 +52,17 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-
+function envoyerMessage() {
+    const messageInput = document.getElementById('message_input');
+    const messageList = document.getElementById('message_list');
+    const text = messageInput.value.trim();
+    if (text !== "") {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = 'message sent';
+        msgDiv.textContent = text;
+        messageList.appendChild(msgDiv);
+        messageInput.value = "";
+        // Scroll automatique vers le bas
+        messageList.parentElement.scrollTop = messageList.parentElement.scrollHeight;
+    }
+}

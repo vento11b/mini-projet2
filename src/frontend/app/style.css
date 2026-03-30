@@ -124,11 +124,6 @@ body, html {
     display: flex;
     flex-direction: column;
     padding: 10px;
-    background: #f5f8fa;   /* Optionnel : couleur de fond */
+    
 }
 
-#message_list {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
