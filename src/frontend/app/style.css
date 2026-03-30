@@ -67,7 +67,7 @@ body, html {
     padding: 8px 12px;
     border-radius: 15px;
     margin: 5px 0;
-    align-self: flex-end;
+    align-self: flex-start;
     max-width: 60%;
     word-break: break-word;
     display: block;
@@ -120,7 +120,7 @@ body, html {
     height: 350px;         /* Choisis la hauteur qui te convient */
     overflow-y: auto;      /* Active le scroll vertical */
     display: flex;
-    flex-direction: column;
+    flex-direction: column ;
     padding: 10px;
     
 }
@@ -132,3 +132,10 @@ body, html {
     gap: 8px;
 }
 
+
+.msg-username {
+    font-weight: bold;
+    margin-right: 8px;
+    color: #ffffff;
+    font-size: 0.95em;
+}
