@@ -73,17 +73,15 @@ body, html {
     display: block;
 }
 
-#addcontact {
+#add_contact {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 150px;
     height: 35px;
-    background-color: black;
     color: white;
-    .newcontact {
-        margin-bottom: 100px;
-    }
+    padding-left: 150px;
+    padding-top: 40px;
 }
 
 #chat-logo {
@@ -125,5 +123,12 @@ body, html {
     flex-direction: column;
     padding: 10px;
     
+}
+
+
+#message_list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
