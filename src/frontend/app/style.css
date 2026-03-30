@@ -117,7 +117,7 @@ body, html {
     color: white;
     border-radius: 50%;
     padding: 0 125px;
-    margin-top: 15px;
+    margin-top: 20px;
 }
 
 #chat-body {
@@ -140,6 +140,6 @@ body, html {
 .msg-username {
     font-weight: bold;
     margin-right: 8px;
-    color: #ffffff;
+    color: #000000;
     font-size: 0.95em;
 }
