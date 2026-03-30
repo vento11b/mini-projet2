@@ -54,3 +54,23 @@ body, html {
     flex: 2;
     background-color: gold;
 }
+
+#addcontact {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 150px;
+    height: 35px;
+    background-color: black;
+    color: white;
+    border-radius: 50%;
+}
+
+#chat-logo {
+    display: flex;
+    align-items: right;
+    justify-content: right;
+    width: 1450px;
+    height: 100px;
+    margin-top: 10px;
+}
