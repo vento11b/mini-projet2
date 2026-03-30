@@ -55,6 +55,7 @@ body, html {
     background-color: gold;
 }
 
+<<<<<<< HEAD
 .message.sent {
     background: #000000;
     color: #fff;
@@ -65,4 +66,24 @@ body, html {
     max-width: 60%;
     word-break: break-word;
     display: block;
+=======
+#addcontact {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 150px;
+    height: 35px;
+    background-color: black;
+    color: white;
+    border-radius: 50%;
+}
+
+#chat-logo {
+    display: flex;
+    align-items: right;
+    justify-content: right;
+    width: 1450px;
+    height: 100px;
+    margin-top: 10px;
+>>>>>>> a3e4566c32865d51d77698d907c01d2ae843ec3c
 }
