@@ -15,6 +15,7 @@ body, html {
     flex-direction: column;
     height: 100%;
     background-color: crimson;
+    border-right: 3px  solid black;
 }
 
 #chat {
@@ -28,11 +29,13 @@ body, html {
 #chatlist-top {
     flex: 3;
     background-color: aquamarine;
+        border-bottom: 3px  solid black;
 }
 
 #chatlist-body {
     flex: 18;
     background-color: blueviolet;
+        border-bottom: 3px  solid black;
 }
 
 #chatlist-bottom {
@@ -43,11 +46,13 @@ body, html {
 #chat-top {
     flex: 3;
     background-color: chocolate;
+        border-bottom: 3px  solid black;
 }
 
 #chat-body {
     flex: 18;
     background-color: cornflowerblue;
+    border-bottom: 3px  solid black;
 }
 
 #chat-bottom {
@@ -57,8 +62,6 @@ body, html {
 
 
 .message.sent {
-    background: #d2e2fc;
-    color: #000000;
     padding: 8px 12px;
     border-radius: 15px;
     margin: 5px 0;
@@ -76,7 +79,9 @@ body, html {
     height: 35px;
     background-color: black;
     color: white;
-    border-radius: 50%;
+    .newcontact {
+        margin-bottom: 100px;
+    }
 }
 
 #chat-logo {
