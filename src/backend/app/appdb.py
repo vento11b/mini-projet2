@@ -17,7 +17,7 @@ conn = sqlite3.connect(DB_FILE, check_same_thread=False)
 
 
 def debug(*args, **kwargs):
-    if DEBUG: print(*args, **kwargs)
+    if DEBUG: print(args, kwargs)
 
 
 
@@ -50,7 +50,7 @@ def add_user(username, password):
         debug(cursor.fetchall())
         return 1
     else:
-        debug(f"username_exist('{username}')", username_exist(username), f"check_password({password})", check_password(password))
+        debug("username_exist('", username, "')", username_exist(username), "check_password('", password, "')", check_password(password), "'", sep="")
         return 0
 
 
