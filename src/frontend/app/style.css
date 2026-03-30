@@ -94,7 +94,6 @@ body, html {
     width: 1450px;
     height: 100px;
     margin-top: 10px;
-    margin-right:10px;
 
 }
 
@@ -140,6 +139,6 @@ body, html {
 .msg-username {
     font-weight: bold;
     margin-right: 8px;
-    color: #ffffff;
+    color: #000000;
     font-size: 0.95em;
 }
