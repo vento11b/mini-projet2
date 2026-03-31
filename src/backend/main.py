@@ -2,8 +2,8 @@ from flask import Flask, request, Response,send_from_directory, redirect, g
 from app import appdb, session
 import json
 
-#from urllib import urlencode # -> python2 
-from urllib.parse import urlencode # -> python3
+from urllib import urlencode # -> python2 
+#from urllib.parse import urlencode # -> python3
 
 flask = Flask(__name__)
 
@@ -79,7 +79,7 @@ def get_channel_messages(channel):
 
 @flask.route("/app/info", methods=["POST"])
 def info():
-    resp = {"username": g.username, "amis": appdb.get_friends(g.username)[1], "requetes amis": appdb.get_friend_requests(g.username)[1], "salons": appdb.get_user_channels(g.username)[1]}
+    resp = {"username": g.username, "amis": appdb.get_friends(g.username)[1], "requetes_amis": appdb.get_friend_requests(g.username)[1], "salons": appdb.get_user_channels(g.username)[1]}
     return {"status": 1, "info": resp}
 
 @flask.route("/app/amis", methods=["POST"])
@@ -166,5 +166,5 @@ def appconnexion():
     return resp
 
 if __name__ == '__main__':
-    flask.debug = True
+    flask.debug = False
     flask.run()

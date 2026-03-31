@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/src/frontend/app/style.css">
     <script defer src="/src/frontend/app/script.js"></script>
+    <script defer src="/src/frontend/app/polling.js"></script>
     <title>Toki</title>
 </head>
-<body>
+<body onload="reloadInfo();">
     <div id="app">
         <div id="chatlist">
             <div id="chatlist-top">
@@ -47,6 +48,5 @@
             </div>
         </div>
     </div>
-    <script defer src="/src/frontend/app/loadDOM.js"></script>
 </body>
 </html>

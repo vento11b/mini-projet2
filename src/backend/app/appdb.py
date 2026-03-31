@@ -13,24 +13,23 @@ DEFAULT_CONDITIONS = [lambda passwd: len(passwd) >= 8,
 
 conn = sqlite3.connect(DB_FILE, check_same_thread=False)
 
-
 def debug(*args, **kwargs):
     if DEBUG: print(args, kwargs)
 
 def check_credentials(username, password):
     cursor = conn.cursor()
     cursor.execute("SELECT username, password FROM users WHERE username = ? AND password = ?", (username, hashlib.sha256(password.encode()).hexdigest()))    
-    return (1, len(cursor.fetchall())==1)
+    return (len(cursor.fetchall())==1, "")
 
 def username_exist(username):
     cursor = conn.cursor()
     cursor.execute("SELECT username FROM users WHERE username = ?", (username,))
-    return (1, len(cursor.fetchall())==0)
+    return (len(cursor.fetchall()), "")
 
 def channel_exist(channel):
     cursor = conn.cursor()
     cursor.execute("SELECT name FROM channels WHERE name = ?", (channel,))
-    return (1, len(cursor.fetchall())>0)
+    return (len(cursor.fetchall())>0, "")
 
 def check_password(password, conditions=None):
     #debug("Checking password: ->")
@@ -108,7 +107,7 @@ def add_friend(username, friend):
 def join_channel(username, channel):
     cursor = conn.cursor()
     try:
-        if not channel_exist(channel):
+        if not channel_exist(channel)[0]:
             debug(username, "creating", channel)
             cursor.execute("INSERT INTO channels (name, admin) VALUES (?, ?);", (channel, username))
         debug(username, "joining", channel)
@@ -174,7 +173,7 @@ def reset_db():
     cursor.execute("PRAGMA foreign_keys = ON;")
     
     cursor.execute("CREATE TABLE users(username TEXT PRIMARY KEY, password TEXT);")
-    cursor.execute("CREATE TABLE friends(username TEXT, friend TEXT, PRIMARY KEY (username, friend), FOREIGN KEY(username) REFERENCES users(username), FOREIGN KEY(friend) REFERENCES users(username));")
+    cursor.execute("CREATE TABLE friends(username TEXT, friend TEXT, PRIMARY KEY (username, friend), FOREIGN KEY(username) REFERENCES users(username), FOREIGN KEY(friend) REFERENCES users(username), CHECK (username != friend));")
     cursor.execute("CREATE TABLE channels(name TEXT PRIMARY KEY, admin TEXT NOT NULL, FOREIGN KEY(admin) REFERENCES users(username));")
     cursor.execute("CREATE TABLE channel_messages(channel TEXT, username TEXT, message TEXT, timestamp TEXT, FOREIGN KEY(channel) REFERENCES channels(name), FOREIGN KEY(username) REFERENCES users(username));")
     cursor.execute("CREATE TABLE private_messages(private_room TEXT, username TEXT, message TEXT, timestamp TEXT);")
@@ -206,5 +205,6 @@ add_user("user5", "aa")
 add_friend("vento", "user2")
 add_friend("vento", "user1")
 add_friend("user1", "vento")
+join_channel("vento", "channel1")
 join_channel("user1", "channel1")
 join_channel("user2", "channel1")
