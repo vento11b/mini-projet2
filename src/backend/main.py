@@ -2,8 +2,8 @@ from flask import Flask, request, Response,send_from_directory
 from app import appdb, session
 import json
 
-from urllib import urlencode # -> python2 
-#from urllib.parse import urlencode # -> python3
+#from urllib import urlencode # -> python2 
+from urllib.parse import urlencode # -> python3
 
 flask = Flask(__name__)
 
