@@ -1,72 +1,232 @@
-body, html {
+body {
     margin: 0;
-    height: 100%;
+    font-family: Arial, sans-serif;
+    background-color: #1e1e2f;
+    color: whblackite;
 }
 
 #app {
     display: flex;
-    gap: 3px;
     height: 100vh;
-    width: 100vw;
-    background-color: black;
 }
+
 
 #chatlist {
+    width: 300px;
+    background-color: rgb(214, 232, 255);
     display: flex;
     flex-direction: column;
-    flex: 1;
-    gap: 3px;
-    height: 100%;
-    background-color: black;
-    /* background-color: crimson; */
 }
 
-#chat {
-    display: flex;
-    flex-direction: column;
-    flex: 5;
-    gap: 3px;
-    height: 100%;
-    background-color: black;
-    /* background-color: hotpink; */
-}
-
-#chatlist-top {
-    flex: 3;
-    background-color: rgb(166, 185, 236);
-    /* background-color: aquamarine; */
-}
-
-#chatlist-body {
-    flex: 18;
-    background-color: rgb(200, 159, 238);
-    /* background-color: blueviolet; */
+#chatlist-top,
+#chatlist-bottom {
+    padding: 10px;
+    border-bottom: 1px solid #444;
+    background-color: rgb(198, 218, 245);
 }
 
 #chatlist-bottom {
-    flex: 2;
-    background-color: rgb(255, 255, 255);
-    /* background-color: beige; */
+    border-top: 1px solid #444;
+    border-bottom: none;
+}
+
+#chatlist-body {
+    flex: 1;
+    overflow-y: auto;
+}
+
+
+.input-group {
+    display: flex;
+    margin-bottom: 5px;
+}
+
+.input-group input {
+    flex: 1;
+    padding: 5px;
+    border: none;
+    border-radius: 4px 0 0 4px;
+}
+
+.input-group button {
+    padding: 5px 10px;
+    border: none;
+    color: black;
+    cursor: pointer;
+}
+
+#contact_list div {
+    padding: 10px;
+    margin: 5px;
+    background-color: rgb(198, 218, 245);*/
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+
+#compte {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logout {
+    background: #ff4d4d;
+    border: none;
+    padding: 5px 10px;
+    color: white;
+    cursor: pointer;
+}
+
+
+#chat {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 #chat-top {
-    flex: 3;
+    padding: 10px;
+    /*background-color: #2a2a40;*/
     background-color: rgb(214, 232, 255);
-    /* background-color: chocolate; */
+    border-bottom: 1px solid #444;
+    font-weight: bold;
 }
 
 #chat-body {
-    flex: 18;
-    background-color: cornflowerblue;
-    /* background-color: cornflowerblue; */
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+    background-color: rgb(240, 244, 250);
 }
+
+
+#message_list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 5px;
+    overflow-y: auto;
+}
+
+
+
+.message {
+    display: inline-block;
+    max-width: 60%;
+    margin-bottom: 10px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    background-color: #aaafeb;
+    word-wrap: break-word;
+}
+
+
+.message.self {
+    background-color: #5865f2;
+    margin-left: auto;
+    display: block;
+    width: fit-content;
+    align-self: flex-end;
+}
+
+.message:not(.self) {
+    align-self: flex-start;
+}
+
 
 #chat-bottom {
-    flex: 2;
+    padding: 10px;
     background-color: rgb(214, 232, 255);
-    /* background-color: gold; */
+    border-top: 1px solid #444;
 }
 
-#contact-list {
-    margin: 10px;
+#input {
+    display: flex;
+}
+
+#input input {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 6px 0 0 6px;
+}
+
+#input button {
+    padding: 10px;
+    border: none;
+    background-color: #5865f2;
+    color: white;
+    cursor: pointer;
+}
+
+.msg-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    opacity: 0.7;
+}
+
+.msg-user {
+    font-weight: bold;
+    margin-right: 20px;
+}
+
+.msg-time {
+    font-style: italic;
+}
+
+.msg-text {
+    margin-top: 5px;
+}
+
+.contact {
+    padding: 10px;
+    margin: 5px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;}
+
+    
+.contact.friend {
+    background-color: #9494b4;
+}
+
+.contact.friend:hover {
+    background-color: #5865f2;
+}
+
+
+.contact.request {
+    background-color: #b18c81;
+}
+
+.contact.request:hover {
+    background-color: #ff9800;
+}
+
+
+.contact.channel {
+    background-color: #8bbd8b;
+}
+
+.contact.channel:hover {
+    background-color: #4caf50;
+}
+
+
+.accept-btn {
+    background-color: #4caf50;
+    border: none;
+    padding: 5px 8px;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+}
+
+.accept-btn:hover {
+    background-color: #66bb6a;
 }
