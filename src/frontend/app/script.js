@@ -9,7 +9,9 @@ function deconnexion() {
 function add_friend(friend) {
     fetch("/app/ajouter/"+friend, {method: 'POST'}).then(resp => resp.json()).then(data =>{
         console.log(data);
-        add_contact(friend, "ami");    
+        if (data.status) {
+            add_contact(friend, "ami");    
+        }
     });
     
 }
@@ -17,14 +19,18 @@ function add_friend(friend) {
 function add_channel(channel) {
     fetch("/app/joindre/"+channel, {method: 'POST'}).then(resp => resp.json()).then(data =>{
         console.log(data);
-        add_contact(channel, "salon");    
+        if (data.status) {
+            add_contact(channel, "salon");
+        }
     });
     
 }
 
 
 
+let contactlist = []
 function add_contact(name, type) {
+    
         let contacts = document.getElementById("contact_list");
         let contact = document.createElement("div")
         contact.classList = ["contact contact-"+type]

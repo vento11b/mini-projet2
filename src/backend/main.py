@@ -1,9 +1,24 @@
 from flask import Flask, request, Response,send_from_directory, redirect, g
 from app import appdb, session
 import json
+#from urllib import urlencode # -> python2 
+from urllib.parse import urlencode # -> python3
 
-from urllib import urlencode # -> python2 
-#from urllib.parse import urlencode # -> python3
+appdb.reset_db()
+appdb.add_user("vento", "a")
+appdb.add_user("user1", "aa")
+appdb.add_user("user2", "aa")
+appdb.add_user("user3", "aa")
+appdb.add_user("user4", "aa")
+appdb.add_user("user5", "aa")
+appdb.add_friend("user2", "vento")
+appdb.add_friend("vento", "user1")
+appdb.add_friend("user1", "vento")
+appdb.join_channel("vento", "channel1")
+appdb.join_channel("user1", "channel1")
+appdb.join_channel("user2", "channel1")
+
+
 
 flask = Flask(__name__)
 
@@ -153,7 +168,7 @@ def appconnexion():
     # Recevoir les donnes pour l'inscription:
     username, password = request.form.get("username"), request.form.get("password")
     
-    if appdb.check_credentials(username, password):
+    if appdb.check_credentials(username, password)[0]:
         # Creer une session
         session_id = session.create(username)
         # Creer la cookie

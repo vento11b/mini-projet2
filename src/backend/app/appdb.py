@@ -94,15 +94,19 @@ def get_user_channels(username):
 
 def add_friend(username, friend):
     cursor = conn.cursor()
+    print(0)
     try:
+        print(1)
         debug("adding friend", friend)
         cursor.execute("INSERT INTO friends (username, friend) VALUES (?, ?);", (username, friend))
         conn.commit()
+        print(11)
+        return (1, "")
 
     except sqlite3.Error as er:
-        return (0, er)
+        print(2)
+        return (0, str(er))
     
-    return (1, "")
 
 def join_channel(username, channel):
     cursor = conn.cursor()
@@ -170,10 +174,10 @@ def reset_db():
     cursor.execute("DROP TABLE IF EXISTS private_messages;")
     cursor.execute("DROP TABLE IF EXISTS channel_members;")
 
-    cursor.execute("PRAGMA foreign_keys = ON;")
+    conn.execute("PRAGMA foreign_keys = ON;")
     
     cursor.execute("CREATE TABLE users(username TEXT PRIMARY KEY, password TEXT);")
-    cursor.execute("CREATE TABLE friends(username TEXT, friend TEXT, PRIMARY KEY (username, friend), FOREIGN KEY(username) REFERENCES users(username), FOREIGN KEY(friend) REFERENCES users(username), CHECK (username != friend));")
+    cursor.execute("CREATE TABLE friends(username TEXT, friend TEXT, CHECK (username != friend), PRIMARY KEY (username, friend), FOREIGN KEY(username) REFERENCES users(username), FOREIGN KEY(friend) REFERENCES users(username));")
     cursor.execute("CREATE TABLE channels(name TEXT PRIMARY KEY, admin TEXT NOT NULL, FOREIGN KEY(admin) REFERENCES users(username));")
     cursor.execute("CREATE TABLE channel_messages(channel TEXT, username TEXT, message TEXT, timestamp TEXT, FOREIGN KEY(channel) REFERENCES channels(name), FOREIGN KEY(username) REFERENCES users(username));")
     cursor.execute("CREATE TABLE private_messages(private_room TEXT, username TEXT, message TEXT, timestamp TEXT);")
@@ -192,19 +196,3 @@ if __name__ == "__main__":
     
     if "--reset" in sys.argv[1:]:
         reset_db()
-    else:
-        reset_db()
-        DEFAULT_CONDITIONS = [lambda x: 1]
-
-add_user("vento", "a")
-add_user("user1", "aa")
-add_user("user2", "aa")
-add_user("user3", "aa")
-add_user("user4", "aa")
-add_user("user5", "aa")
-add_friend("vento", "user2")
-add_friend("vento", "user1")
-add_friend("user1", "vento")
-join_channel("vento", "channel1")
-join_channel("user1", "channel1")
-join_channel("user2", "channel1")
