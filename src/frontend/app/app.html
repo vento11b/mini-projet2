@@ -14,11 +14,11 @@
             <div id="add_contact">
                 <div class="input-group">
                     <input type="text" id="addfriend" placeholder="Ajouter ami">
-                    <button onclick="add_friend(document.getElementById('addfriend').value)">+</button>
+                    <button onclick="addFriend(document.getElementById('addfriend').value)">+</button>
                 </div>
                 <div class="input-group">
-                    <input type="text" placeholder="Ajouter groupe">
-                    <button>+</button>
+                    <input type="text" id="addchannel" placeholder="Ajouter groupe">
+                    <button onclick="addChannel()">+</button>
                 </div>
             </div>
         </div>
@@ -49,8 +49,8 @@
 
         <div id="chat-bottom">
             <div id="input">
-                <input type="text" id="message_input" placeholder="Envoyer message...">
-                <button onclick="sendMessage()">Envoyer</button>
+                <input type="text" id="message_input" placeholder="Envoyer message..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+                <button onclick="sendMessage()">>Envoyer</button>
             </div>
         </div>
     </div>

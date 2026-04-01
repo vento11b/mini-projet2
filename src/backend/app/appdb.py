@@ -12,6 +12,7 @@ DEFAULT_CONDITIONS = [lambda passwd: len(passwd) >= 8,
 
 
 conn = sqlite3.connect(DB_FILE, check_same_thread=False)
+conn.execute("PRAGMA foreign_keys = ON;")
 
 def debug(*args, **kwargs):
     if DEBUG: print(args, kwargs)
@@ -122,7 +123,7 @@ def join_channel(username, channel):
 def get_private_chat_history(username, friend):
     cursor = conn.cursor()
     try:
-        cursor.execute("SELECT username, message, timestamp FROM private_messages WHERE private_room=?;", ("".join(sorted([username, friend])),))
+        cursor.execute("SELECT id, username, message, timestamp FROM private_messages WHERE private_room=?;", ("".join(sorted([username, friend])),))
     except sqlite3.Error as er:
         return (0, str(er))
     return (1 ,[message for message in cursor.fetchall()])
@@ -130,7 +131,7 @@ def get_private_chat_history(username, friend):
 def get_channel_chat_history(channel):
     cursor = conn.cursor()
     try:
-        cursor.execute("SELECT username, message, timestamp FROM channel_messages WHERE channel=?;", (channel,))
+        cursor.execute("SELECT id, username, message, timestamp FROM channel_messages WHERE channel=?;", (channel,))
     except sqlite3.Error as er:
         return (0, str(er))
     return (1, [message for message in cursor.fetchall()])
@@ -161,6 +162,7 @@ def send_channel(username, channel, message):
     return (1, "")
 
 def reset_db():
+    conn.execute("PRAGMA foreign_keys = OFF;")
     cursor = conn.cursor()
 
     cursor.execute("DROP TABLE IF EXISTS users;")
@@ -175,8 +177,8 @@ def reset_db():
     cursor.execute("CREATE TABLE users(username TEXT PRIMARY KEY, password TEXT);")
     cursor.execute("CREATE TABLE friends(username TEXT, friend TEXT, CHECK (username != friend), PRIMARY KEY (username, friend), FOREIGN KEY(username) REFERENCES users(username), FOREIGN KEY(friend) REFERENCES users(username));")
     cursor.execute("CREATE TABLE channels(name TEXT PRIMARY KEY, admin TEXT NOT NULL, FOREIGN KEY(admin) REFERENCES users(username));")
-    cursor.execute("CREATE TABLE channel_messages(channel TEXT, username TEXT, message TEXT, timestamp TEXT, FOREIGN KEY(channel) REFERENCES channels(name), FOREIGN KEY(username) REFERENCES users(username));")
-    cursor.execute("CREATE TABLE private_messages(private_room TEXT, username TEXT, message TEXT, timestamp TEXT);")
+    cursor.execute("CREATE TABLE channel_messages(id INTEGER PRIMARY KEY, channel TEXT, username TEXT, message TEXT, timestamp TEXT, FOREIGN KEY(channel) REFERENCES channels(name), FOREIGN KEY(username) REFERENCES users(username));")
+    cursor.execute("CREATE TABLE private_messages(id INTEGER PRIMARY KEY, private_room TEXT, username TEXT, message TEXT, timestamp TEXT, FOREIGN KEY(username) REFERENCES users(username));")
     cursor.execute("CREATE TABLE channel_members(channel TEXT, username TEXT, PRIMARY KEY (channel, username), FOREIGN KEY(channel) REFERENCES channels(name));")
     
     

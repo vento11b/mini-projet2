@@ -4,7 +4,7 @@ let currentType = null;
 
 
 window.onload = () => {
-    init();
+    update();
 
     const input = document.getElementById("message_input");
 
@@ -20,15 +20,13 @@ window.onload = () => {
 };
 
 
-async function init() {
+async function update() {
     const res = await fetch("/app/info", { method: "POST" });
     const data = await res.json();
     
     if (data.status !== 1) return;
     
     document.getElementById("username").innerText = data.info.username;
-
-    loadChatFromURL();
     
     renderContacts(
         data.info.amis,
@@ -36,6 +34,7 @@ async function init() {
         data.info.salons
     );
     
+    loadChatFromURL();
 }
 
 async function acceptFriend(username) {
@@ -45,11 +44,15 @@ async function acceptFriend(username) {
 
     res.json();
 
-    init();
+    update();
 }
 
-
+let lastcontacts = []
 function renderContacts(friends, requests, channels) {
+    if (JSON.stringify([friends, requests, channels]) === JSON.stringify(lastcontacts)) return;
+    
+    lastcontacts = [friends, requests, channels]
+    console.log("contacts")
     const list = document.getElementById("contact_list");
     list.innerHTML = "";
 
@@ -69,9 +72,10 @@ function renderContacts(friends, requests, channels) {
         const div = document.createElement("div");
         div.classList.add("contact", "request");
 
+        //✔
         div.innerHTML = `
             <span>${req}</span>
-            <button class="accept-btn">✔</button>
+            <button class="accept-btn">+</button>
         `;
 
         div.querySelector(".accept-btn").onclick = (e) => {
@@ -98,17 +102,19 @@ function renderContacts(friends, requests, channels) {
 
 function loadChatFromURL() {
     const params = new URLSearchParams(window.location.search);
-
+    
+    
     const type = params.get("type");
     const chat = params.get("chat");
-
+    
     if (!type || !chat) return;
-
+    
     if (type === "friend") {
         openFriendChat(chat);
     } else if (type === "channel") {
         openChannelChat(chat);
     }
+
 }
 
 
@@ -122,6 +128,7 @@ function openFriendChat(friend) {
     window.history.pushState({}, "", url);
 
     document.getElementById("chat-info").innerText = friend;
+
     loadMessages();
 }
 
@@ -129,17 +136,17 @@ function openChannelChat(channel) {
     currentChat = channel;
     currentType = "channel";
 
-    // 👇 actualizar URL
     const url = new URL(window.location);
     url.searchParams.set("type", "channel");
     url.searchParams.set("chat", channel);
     window.history.pushState({}, "", url);
 
     document.getElementById("chat-info").innerText = "Salon " + channel;
+
     loadMessages();
 }
 
-
+let lastmessages = {}
 async function loadMessages() {
     if (!currentChat) return;
 
@@ -155,26 +162,29 @@ async function loadMessages() {
     const data = await res.json();
 
     if (data.status !== 1) return;
-
-    renderMessages(data.info);
+    if (JSON.stringify(data.info) !== JSON.stringify(lastmessages)) {
+        lastmessages = data.info;
+        renderMessages(data.info);
+    }
 }
 
 function renderMessages(messages) {
     const container = document.getElementById("message_list");
     const currentUser = document.getElementById("username").innerText.trim();
 
+    container.innerHTML = "";
     
     const isAtBottom = container.scrollHeight - container.scrollTop <= container.clientHeight + 10;
 
     messages.forEach(msg => {
-        const [sender, text, time] = msg;
+        const [id, sender, text, time] = msg;
 
         
         if (document.getElementById(`msg-${time}`)) return;
 
         const div = document.createElement("div");
         div.classList.add("message");
-        div.id = `msg-${time}`;
+        div.id = `msg-${id}`;
 
         if (sender === currentUser) {
             div.classList.add("self");
@@ -200,30 +210,38 @@ function renderMessages(messages) {
 
 
 async function sendMessage() {
-    const input = document.querySelector("#input input");
-    const message = input.value;
+    if (!currentChat) return;
+    const input = document.getElementById("message_input");
+    const text = input.value.trim();
+    if (!text) return;
 
-    if (!message || !currentChat) return;
-
-    let url = "";
-
+    let url;
     if (currentType === "friend") {
-        url = `/app/ami/envoyer/${currentChat}/${encodeURIComponent(message)}`;
+        url = `/app/ami/envoyer/${currentChat}`;
     } else {
-        url = `/app/salon/envoyer/${currentChat}/${encodeURIComponent(message)}`;
+        url = `/app/salon/envoyer/${currentChat}`;
     }
 
-    await fetch(url, { method: "POST" });
+    const res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: text })
+    });
 
-    input.value = "";
-    await loadMessages();
+    const data = await res.json();
+    if (data.status === 1) {
+        input.value = "";
+        loadMessages();
+    } else {
+        alert("Error al enviar: " + data.info);
+    }
 }
 
 
 document.querySelector("#input button").onclick = sendMessage;
 
 
-async function add_friend(name) {
+async function addFriend(name) {
     if (!name) return;
 
     const res = await fetch(`/app/ajouter/${name}`, { method: "POST" });
@@ -231,7 +249,21 @@ async function add_friend(name) {
 
     //alert(data.info);
 
-    init();
+    update();
+}
+
+async function addChannel() {
+    const input = document.getElementById("addchannel");
+    const channelName = input.value.trim();
+    if (!channelName) return;
+
+    const res = await fetch(`/app/joindre/${channelName}`, { method: "POST" });
+    const data = await res.json();
+
+    if (data.status === 1) {
+        input.value = "";
+        update();
+    }
 }
 
 
@@ -242,8 +274,5 @@ async function deconnexion() {
 
 
 setInterval(() => {
-    init();
-    if (currentChat) {
-        loadMessages();
-    }
-}, 3000);
+    update();
+}, 1000);
