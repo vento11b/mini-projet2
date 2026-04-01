@@ -71,13 +71,15 @@ def app():
 @flask.route("/app/ami/envoyer/<friend>/<message>", methods=["POST"])
 def send_friend(friend, message):
     # Gestion de chats privees
-    resp = appdb.send_private(g.username, friend, message)
+    resp = appdb.send_friend(g.username, friend, message)
+    print(resp)
     return {"status": resp[0], "info": resp[1]}
 
 @flask.route("/app/ami/messages/<friend>", methods=["POST"])
 def get_private_mesages(friend):
     # Gestion de chats privees
     resp = appdb.get_private_chat_history(g.username, friend)
+    print(resp)
     return {"status": resp[0], "info": resp[1]}
 
 @flask.route("/app/salon/envoyer/<channel>/<message>", methods=["POST"])

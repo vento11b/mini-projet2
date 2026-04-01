@@ -29,15 +29,15 @@ function add_channel(channel) {
 
 
 let contactlist = []
-function add_contact(name, type) {
-    
+function update_contacts(contacts, type) {
+    for (let i=0; i<contacts.length; i++) {
         let contacts = document.getElementById("contact_list");
         let contact = document.createElement("div")
         contact.classList = ["contact contact-"+type]
-        contact.id = name
-        contact.textContent = type+": "+name
+        contact.id = contact[i].
+        contact.textContent = type+": "+contact[i].
         contacts.appendChild(contact)
-    
+    }
 }
 
 

@@ -45,7 +45,7 @@ def add_user(username, password):
         cursor.execute("INSERT INTO users(username, password) VALUES (?, ?)", (username, hashlib.sha256(password.encode()).hexdigest()))
         conn.commit()
     except sqlite3.Error as er:
-        return (0, er)
+        return (0, str(er))
     
     return (1, "")
 
@@ -55,7 +55,7 @@ def get_usernames():
     try:
         cursor.execute("SELECT username FROM users;")
     except sqlite3.Error as er:
-        return (0, er)
+        return (0, str(er))
     return (1, [username[0] for username in cursor.fetchall()])
 
 def get_channels():
@@ -63,7 +63,7 @@ def get_channels():
     try:
         cursor.execute("SELECT name FROM channels;")
     except sqlite3.Error as er:
-        return (0, er)
+        return (0, str(er))
     return (1, [channel[0] for channel in cursor.fetchall()])
 
 
@@ -72,7 +72,7 @@ def get_friends(username):
     try:
         cursor.execute("SELECT t1.friend FROM friends t1 JOIN friends t2 ON t1.username = t2.friend AND t1.friend = t2.username WHERE t1.username=?", (username,))
     except sqlite3.Error as er:
-        return (0, er)
+        return (0, str(er))
     return (1, [friend[0] for friend in cursor.fetchall()])
 
 def get_friend_requests(username):
@@ -80,7 +80,7 @@ def get_friend_requests(username):
     try:
         cursor.execute("SELECT t1.username, t1.friend FROM friends t1 WHERE NOT EXISTS ( SELECT 1 FROM friends t2 WHERE t2.username = t1.friend AND t2.friend = t1.username) AND t1.friend=?;", (username,))
     except sqlite3.Error as er:
-        return (0, er)
+        return (0, str(er))
     
     return (1, [friend[0] for friend in cursor.fetchall()])
 
@@ -89,22 +89,18 @@ def get_user_channels(username):
     try:
         cursor.execute("SELECT channel FROM channel_members WHERE username=?;", (username,))
     except sqlite3.Error as er:
-        return (0, er)
+        return (0, str(er))
     return (1, [channel[0] for channel in cursor.fetchall()])
 
 def add_friend(username, friend):
     cursor = conn.cursor()
-    print(0)
     try:
-        print(1)
         debug("adding friend", friend)
         cursor.execute("INSERT INTO friends (username, friend) VALUES (?, ?);", (username, friend))
         conn.commit()
-        print(11)
         return (1, "")
 
     except sqlite3.Error as er:
-        print(2)
         return (0, str(er))
     
 
@@ -119,7 +115,7 @@ def join_channel(username, channel):
         conn.commit()
 
     except sqlite3.Error as er:
-        return (0, er)
+        return (0, str(er))
     
     return (1, "")
 
@@ -128,7 +124,7 @@ def get_private_chat_history(username, friend):
     try:
         cursor.execute("SELECT username, message, timestamp FROM private_messages WHERE private_room=?;", ("".join(sorted([username, friend])),))
     except sqlite3.Error as er:
-        return (0, er)
+        return (0, str(er))
     return (1 ,[message for message in cursor.fetchall()])
 
 def get_channel_chat_history(channel):
@@ -136,19 +132,19 @@ def get_channel_chat_history(channel):
     try:
         cursor.execute("SELECT username, message, timestamp FROM channel_messages WHERE channel=?;", (channel,))
     except sqlite3.Error as er:
-        return (0, er)
+        return (0, str(er))
     return (1, [message for message in cursor.fetchall()])
 
 def send_friend(username, friend, message):
     cursor = conn.cursor()
     try:
-        if friend in get_friends(username):
+        if friend in get_friends(username)[1]:
             cursor.execute("INSERT INTO private_messages (private_room, username, message, timestamp) VALUES (?, ?, ?,  datetime('now'));", ("".join(sorted([username, friend])), username, message))
             conn.commit()
         else:
-            return (0, er)
+            return (0, "not friends")
     except sqlite3.Error as er:
-        return (0, er)
+        return (0, str(er))
     
     return (1, "")
 
@@ -160,7 +156,7 @@ def send_channel(username, channel, message):
         conn.commit()
 
     except sqlite3.Error as er:
-        return (0, er)
+        return (0, str(er))
     
     return (1, "")
 
