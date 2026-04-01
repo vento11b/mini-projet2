@@ -5,11 +5,21 @@ function fetchjson(url) {
 }
 
 
+//function deconnexion() {
+//    fetch('/app/deconnexion').then(data => {
+//        console.log(data);
+//    });
+//    
+//}
+
 function deconnexion() {
-    fetch('/app/deconnexion').then(data => {
-        console.log(data);
-    });
-    
+    fetch('/app/deconnexion', { method: 'POST' })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status) {
+                window.location.href = "/connexion";
+            }
+        });
 }
 
 function get_compte() {

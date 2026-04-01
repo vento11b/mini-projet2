@@ -75,12 +75,19 @@ def add_friend(friend):
 
 @flask.route("/app/deconnexion", methods=["POST"])
 def deconnexion():
+    resp = Response()
     session_id = request.cookies.get('session_id')
     username = session.check(session_id)
+
     if session_id and username:
         session.remove(session_id)
-    #print(session.get_all(), request.cookies.get('session_id')!=None)
-    return {"status": request.cookies.get('session_id')==None}
+
+    # Supprimer la cookie côté client
+    resp.set_cookie("session_id", "", expires=0)
+
+    resp.content_type = "application/json"
+    resp.data = json.dumps({"status": True})
+    return resp
 
 
 @flask.route("/inscription", methods=["GET", "POST"])
