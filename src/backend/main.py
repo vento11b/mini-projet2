@@ -1,22 +1,10 @@
 from flask import Flask, request, Response,send_from_directory, redirect, g
 from app import appdb, session
 import json
+
 #from urllib import urlencode # -> python2 
 from urllib.parse import urlencode # -> python3
 
-appdb.reset_db()
-appdb.add_user("vento", "a")
-appdb.add_user("user1", "aa")
-appdb.add_user("user2", "aa")
-appdb.add_user("user3", "aa")
-appdb.add_user("user4", "aa")
-appdb.add_user("user5", "aa")
-appdb.add_friend("user2", "vento")
-appdb.add_friend("vento", "user1")
-appdb.add_friend("user1", "vento")
-appdb.join_channel("vento", "channel1")
-appdb.join_channel("user1", "channel1")
-appdb.join_channel("user2", "channel1")
 
 
 
@@ -68,23 +56,30 @@ def allapp():
 def app():
     return send_from_directory("../frontend/app","app.html")
 
-@flask.route("/app/ami/envoyer/<friend>/<message>", methods=["POST"])
-def send_friend(friend, message):
-    # Gestion de chats privees
+@flask.route("/app/ami/envoyer/<friend>", methods=["POST"])
+def send_friend(friend):
+    data = request.get_json()
+    if not data or "message" not in data:
+        return {"status": 0, "info": "Mensaje no proporcionado"}
+
+    message = data["message"]
     resp = appdb.send_friend(g.username, friend, message)
-    print(resp)
     return {"status": resp[0], "info": resp[1]}
 
 @flask.route("/app/ami/messages/<friend>", methods=["POST"])
 def get_private_mesages(friend):
     # Gestion de chats privees
     resp = appdb.get_private_chat_history(g.username, friend)
-    print(resp)
     return {"status": resp[0], "info": resp[1]}
 
-@flask.route("/app/salon/envoyer/<channel>/<message>", methods=["POST"])
-def send_channel(channel, message):
+@flask.route("/app/salon/envoyer/<channel>", methods=["POST"])
+def send_channel(channel):
     # Gestion de salons
+    data = request.get_json()
+    if not data or "message" not in data:
+        return {"status": 0, "info": "Message vide"}
+
+    message = data["message"]
     resp = appdb.send_channel(g.username, channel, message)
     return {"status": resp[0], "info": resp[1]}
 
@@ -102,7 +97,6 @@ def info():
 @flask.route("/app/amis", methods=["POST"])
 def get_friends():
     resp = appdb.get_friends(g.username)
-    print(resp)
     return {"status": resp[0], "info": resp[1]}
 
 @flask.route("/app/salons", methods=["POST"])
@@ -139,22 +133,14 @@ def appinscription():
         if appdb.username_exist(username):
             # Creer utilisateur
             if appdb.add_user(username, password):
-                ## Creer une session
-                #session_id = session.create(username)
-                ## Creer la cookie
-                #resp.set_cookie("session_id", session_id)
-                print("success")
                 resp.location = "/connexion"
             else:
-                print("error")
                 error = {"error": "Erreur inconnue"}
                 resp.location = "/inscription?"+urlencode(error)
         else:
-            print("error user unavailable")
             error = {"error": "L'utilisateur existe deja"}
             resp.location = "/inscription?"+urlencode(error)
     else:
-        print("error incompatible password")
         error = {"error": "Le mot de passe ne remplit pas les conditions"}
         resp.location = "/inscription?"+urlencode(error)
 
