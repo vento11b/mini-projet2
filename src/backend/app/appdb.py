@@ -123,7 +123,7 @@ def join_channel(username, channel):
 def get_private_chat_history(username, friend):
     cursor = conn.cursor()
     try:
-        cursor.execute("SELECT id, username, message, timestamp FROM private_messages WHERE private_room=?;", ("".join(sorted([username, friend])),))
+        cursor.execute("SELECT id, username, message, message_type, timestamp FROM private_messages WHERE private_room=?;", ("".join(sorted([username, friend])),))
     except sqlite3.Error as er:
         return (0, str(er))
     return (1 ,[message for message in cursor.fetchall()])
@@ -131,16 +131,16 @@ def get_private_chat_history(username, friend):
 def get_channel_chat_history(channel):
     cursor = conn.cursor()
     try:
-        cursor.execute("SELECT id, username, message, timestamp FROM channel_messages WHERE channel=?;", (channel,))
+        cursor.execute("SELECT id, username, message, message_type, timestamp FROM channel_messages WHERE channel=?;", (channel,))
     except sqlite3.Error as er:
         return (0, str(er))
     return (1, [message for message in cursor.fetchall()])
 
-def send_friend(username, friend, message):
+def send_friend(username, friend, message, message_type='text'):
     cursor = conn.cursor()
     try:
         if friend in get_friends(username)[1]:
-            cursor.execute("INSERT INTO private_messages (private_room, username, message, timestamp) VALUES (?, ?, ?,  datetime('now'));", ("".join(sorted([username, friend])), username, message))
+            cursor.execute("INSERT INTO private_messages (private_room, username, message, message_type, timestamp) VALUES (?, ?, ?, ?, datetime('now'));", ("".join(sorted([username, friend])), username, message, message_type))
             conn.commit()
         else:
             return (0, "not friends")
@@ -149,11 +149,11 @@ def send_friend(username, friend, message):
     
     return (1, "")
 
-def send_channel(username, channel, message):
+def send_channel(username, channel, message, message_type='text'):
     cursor = conn.cursor()
     try:
         debug("")
-        cursor.execute("INSERT INTO channel_messages (channel, username, message, timestamp) VALUES (?, ?, ?,  datetime('now'));", (channel, username, message))
+        cursor.execute("INSERT INTO channel_messages (channel, username, message, message_type, timestamp) VALUES (?, ?, ?, ?, datetime('now'));", (channel, username, message, message_type))
         conn.commit()
 
     except sqlite3.Error as er:
@@ -177,8 +177,8 @@ def reset_db():
     cursor.execute("CREATE TABLE users(username TEXT PRIMARY KEY, password TEXT);")
     cursor.execute("CREATE TABLE friends(username TEXT, friend TEXT, CHECK (username != friend), PRIMARY KEY (username, friend), FOREIGN KEY(username) REFERENCES users(username), FOREIGN KEY(friend) REFERENCES users(username));")
     cursor.execute("CREATE TABLE channels(name TEXT PRIMARY KEY, admin TEXT NOT NULL, FOREIGN KEY(admin) REFERENCES users(username));")
-    cursor.execute("CREATE TABLE channel_messages(id INTEGER PRIMARY KEY, channel TEXT, username TEXT, message TEXT, timestamp TEXT, FOREIGN KEY(channel) REFERENCES channels(name), FOREIGN KEY(username) REFERENCES users(username));")
-    cursor.execute("CREATE TABLE private_messages(id INTEGER PRIMARY KEY, private_room TEXT, username TEXT, message TEXT, timestamp TEXT, FOREIGN KEY(username) REFERENCES users(username));")
+    cursor.execute("CREATE TABLE channel_messages(id INTEGER PRIMARY KEY, channel TEXT, username TEXT, message TEXT, message_type TEXT DEFAULT 'text', timestamp TEXT, FOREIGN KEY(channel) REFERENCES channels(name), FOREIGN KEY(username) REFERENCES users(username));")
+    cursor.execute("CREATE TABLE private_messages(id INTEGER PRIMARY KEY, private_room TEXT, username TEXT, message TEXT, message_type TEXT DEFAULT 'text', timestamp TEXT, FOREIGN KEY(username) REFERENCES users(username));")
     cursor.execute("CREATE TABLE channel_members(channel TEXT, username TEXT, PRIMARY KEY (channel, username), FOREIGN KEY(channel) REFERENCES channels(name));")
     
     

@@ -17,6 +17,19 @@ window.onload = () => {
             }
         }
     });
+
+    const imageInput = document.getElementById("image_input");
+    imageInput.addEventListener("change", function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById("preview_img").src = e.target.result;
+                document.getElementById("image_preview").style.display = "block";
+            };
+            reader.readAsDataURL(file);
+        }
+    });
 };
 
 
@@ -177,10 +190,9 @@ function renderMessages(messages) {
     const isAtBottom = container.scrollHeight - container.scrollTop <= container.clientHeight + 10;
 
     messages.forEach(msg => {
-        const [id, sender, text, time] = msg;
-
+        const [id, sender, content, message_type, time] = msg;
         
-        if (document.getElementById(`msg-${time}`)) return;
+        if (document.getElementById(`msg-${id}`)) return;
 
         const div = document.createElement("div");
         div.classList.add("message");
@@ -192,12 +204,19 @@ function renderMessages(messages) {
             div.classList.add("received");
         }
 
+        let contentHtml;
+        if (message_type === 'image') {
+            contentHtml = `<img src="${content}" alt="Image" style="max-width: 200px; max-height: 200px;">`;
+        } else {
+            contentHtml = `<div class="msg-text" style="white-space: pre-wrap;">${content}</div>`;
+        }
+
         div.innerHTML = `
             <div class="msg-header">
                 <span class="msg-user">${sender}</span>
                 <span class="msg-time">${time}</span>
             </div>
-            <div class="msg-text" style="white-space: pre-wrap;">${text}</div>
+            ${contentHtml}
         `;
 
         container.appendChild(div);
@@ -212,31 +231,54 @@ function renderMessages(messages) {
 async function sendMessage() {
     if (!currentChat) return;
     const input = document.getElementById("message_input");
+    const imageInput = document.getElementById("image_input");
     const text = input.value.trim();
-    if (!text) return;
+    const file = imageInput.files[0];
 
-    let url;
+    if (!text && !file) return;
+
+    let url, body, headers;
     if (currentType === "friend") {
         url = `/app/ami/envoyer/${currentChat}`;
     } else {
         url = `/app/salon/envoyer/${currentChat}`;
     }
 
+    if (file) {
+        // Enviar como FormData para la imagen
+        const formData = new FormData();
+        formData.append('image', file);
+        body = formData;
+        headers = {};
+    } else {
+        // Enviar como JSON para texto
+        body = JSON.stringify({ message: text });
+        headers = { "Content-Type": "application/json" };
+    }
+
     const res = await fetch(url, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: text })
+        headers: headers,
+        body: body
     });
 
     const data = await res.json();
     if (data.status === 1) {
         input.value = "";
+        imageInput.value = "";  // Limpiar el input de imagen
+        removeImage();  // Ocultar preview
         loadMessages();
     } else {
-        alert("Error al enviar: " + data.info);
+        alert("Erreur lors de l'envoi: " + data.info);
     }
 }
 
+
+function removeImage() {
+    document.getElementById("image_preview").style.display = "none";
+    document.getElementById("preview_img").src = "";
+    document.getElementById("image_input").value = "";
+}
 
 document.querySelector("#input button").onclick = sendMessage;
 
