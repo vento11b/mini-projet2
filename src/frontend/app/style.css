@@ -155,11 +155,23 @@ body {
     display: flex;
 }
 
-#input input {
+#input input[type="text"] {
     flex: 1;
     padding: 10px;
     border: none;
-    border-radius: 6px 0 0 6px;
+    border-radius: 4px 0 0 4px;
+    border-right: 1px solid #ccc;
+}
+
+#input label {
+    padding: 10px;
+    border: none;
+    background-color: #5865f2;
+    color: white;
+    cursor: pointer;
+    border-radius: 0;
+    border-right: 1px solid #ccc;
+    font-size: 14px;
 }
 
 #input button {
@@ -168,6 +180,8 @@ body {
     background-color: #5865f2;
     color: white;
     cursor: pointer;
+    border-radius: 0 4px 4px 0;
+    font-size: 14px;
 }
 
 .msg-header {

@@ -1,6 +1,6 @@
 from flask import Flask, request, Response,send_from_directory, redirect, g
 from app import appdb, session
-import json
+import json, base64
 
 #from urllib import urlencode # -> python2 
 from urllib.parse import urlencode # -> python3
@@ -58,12 +58,25 @@ def app():
 
 @flask.route("/app/ami/envoyer/<friend>", methods=["POST"])
 def send_friend(friend):
-    data = request.get_json()
-    if not data or "message" not in data:
-        return {"status": 0, "info": "Mensaje no proporcionado"}
-
-    message = data["message"]
-    resp = appdb.send_friend(g.username, friend, message)
+    if 'image' in request.files:
+        file = request.files['image']
+        if file and file.filename:
+            if not file.mimetype.startswith('image/'):
+                return {"status": 0, "info": "Seuls les fichiers image sont autorisés"}
+            # Leer y convertir a base64
+            image_data = base64.b64encode(file.read()).decode('utf-8')
+            message_type = 'image'
+            message = f"data:{file.mimetype};base64,{image_data}"  # Formato para mostrar en HTML
+        else:
+            return {"status": 0, "info": "Image invalide"}
+    else:
+        data = request.get_json()
+        if not data or "message" not in data:
+            return {"status": 0, "info": "Message non fourni"}
+        message = data["message"]
+        message_type = 'text'
+    
+    resp = appdb.send_friend(g.username, friend, message, message_type)
     return {"status": resp[0], "info": resp[1]}
 
 @flask.route("/app/ami/messages/<friend>", methods=["POST"])
@@ -75,12 +88,24 @@ def get_private_mesages(friend):
 @flask.route("/app/salon/envoyer/<channel>", methods=["POST"])
 def send_channel(channel):
     # Gestion de salons
-    data = request.get_json()
-    if not data or "message" not in data:
-        return {"status": 0, "info": "Message vide"}
-
-    message = data["message"]
-    resp = appdb.send_channel(g.username, channel, message)
+    if 'image' in request.files:
+        file = request.files['image']
+        if file and file.filename:
+            if not file.mimetype.startswith('image/'):
+                return {"status": 0, "info": "Seuls les fichiers image sont autorisés"}
+            image_data = base64.b64encode(file.read()).decode('utf-8')
+            message_type = 'image'
+            message = f"data:{file.mimetype};base64,{image_data}"
+        else:
+            return {"status": 0, "info": "Image invalide"}
+    else:
+        data = request.get_json()
+        if not data or "message" not in data:
+            return {"status": 0, "info": "Message vide"}
+        message = data["message"]
+        message_type = 'text'
+    
+    resp = appdb.send_channel(g.username, channel, message, message_type)
     return {"status": resp[0], "info": resp[1]}
 
 @flask.route("/app/salon/messages/<channel>", methods=["POST"])

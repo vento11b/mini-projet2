@@ -48,8 +48,15 @@
         </div>
 
         <div id="chat-bottom">
+            <div id="image_preview" style="display: none; margin-bottom: 10px;">
+                <img id="preview_img" src="" alt="Aperçu" style="max-width: 200px; max-height: 200px;">
+                <button onclick="removeImage()">x</button>
+            </div>
             <div id="input">
                 <input type="text" id="message_input" placeholder="Envoyer message..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+
+                <input type="file" id="image_input" accept="image/*" style="display: none;">
+                <label for="image_input">Image</label>
                 <button onclick="sendMessage()">Envoyer</button>
             </div>
         </div>
