@@ -140,7 +140,7 @@ def send_friend(username, friend, message, message_type='text'):
     cursor = conn.cursor()
     try:
         if friend in get_friends(username)[1]:
-            cursor.execute("INSERT INTO private_messages (private_room, username, message, message_type, timestamp) VALUES (?, ?, ?, ?, datetime('now'));", ("".join(sorted([username, friend])), username, message, message_type))
+            cursor.execute("INSERT INTO private_messages (private_room, username, message, message_type, timestamp) VALUES (?, ?, ?, ?, datetime('now', 'localtime'));", ("".join(sorted([username, friend])), username, message, message_type))
             conn.commit()
         else:
             return (0, "not friends")
@@ -153,7 +153,7 @@ def send_channel(username, channel, message, message_type='text'):
     cursor = conn.cursor()
     try:
         debug("")
-        cursor.execute("INSERT INTO channel_messages (channel, username, message, message_type, timestamp) VALUES (?, ?, ?, ?, datetime('now'));", (channel, username, message, message_type))
+        cursor.execute("INSERT INTO channel_messages (channel, username, message, message_type, timestamp) VALUES (?, ?, ?, ?, datetime('now', 'localtime'));", (channel, username, message, message_type))
         conn.commit()
 
     except sqlite3.Error as er:

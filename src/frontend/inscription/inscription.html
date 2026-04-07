@@ -29,7 +29,7 @@
             
 
             <!-- lien pour connecter interface inscription et connexion ci-dessous -->
-            <input type="submit" value="S'inscrire">
+            <input id="submitBtn" type="submit" value="S'inscrire">
             <p>Déjà inscrit ? <a href="/connexion">Se connecter</a></p>
         </form>
     </div>
@@ -38,6 +38,27 @@
         if (error) {
             alert(error);
         }
+
+        document.getElementById('form').addEventListener('input', function () {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const submitBtn = document.getElementById('submitBtn');
+            let isValid = true;
+            if (password !== confirmPassword) {
+                errorElement.textContent = 'Passwords do not match';
+                errorElement.classList.remove('success');
+                errorElement.classList.add('error');
+                isValid = false;
+            }
+            if (isValid) {
+                submitBtn.classList.add('enabled');
+                submitBtn.disabled = false;
+            } else {
+                submitBtn.classList.remove('enabled');
+                submitBtn.disabled = true;
+            }
+        });
+
 
         //const form = document.getElementById('form');
         //const password = document.getElementById('password');
