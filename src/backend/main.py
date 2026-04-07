@@ -2,8 +2,8 @@ from flask import Flask, request, Response,send_from_directory, redirect, g
 from app import appdb, session
 import json, base64
 
-#from urllib import urlencode # -> python2 
-from urllib.parse import urlencode # -> python3
+from urllib import urlencode # -> python2 
+#from urllib.parse import urlencode # -> python3
 
 
 
@@ -62,11 +62,11 @@ def send_friend(friend):
         file = request.files['image']
         if file and file.filename:
             if not file.mimetype.startswith('image/'):
-                return {"status": 0, "info": "Seuls les fichiers image sont autorisés"}
+                return {"status": 0, "info": "Seuls les fichiers image sont autorises"}
             # Leer y convertir a base64
             image_data = base64.b64encode(file.read()).decode('utf-8')
             message_type = 'image'
-            message = f"data:{file.mimetype};base64,{image_data}"  # Formato para mostrar en HTML
+            message = "data:"+file.mimetype+";base64,"+image_data  # Formato para mostrar en HTML
         else:
             return {"status": 0, "info": "Image invalide"}
     else:
@@ -92,10 +92,10 @@ def send_channel(channel):
         file = request.files['image']
         if file and file.filename:
             if not file.mimetype.startswith('image/'):
-                return {"status": 0, "info": "Seuls les fichiers image sont autorisés"}
+                return {"status": 0, "info": "Seuls les fichiers image sont autorises"}
             image_data = base64.b64encode(file.read()).decode('utf-8')
             message_type = 'image'
-            message = f"data:{file.mimetype};base64,{image_data}"
+            message = "data:"+file.mimetype+";base64,"+image_data
         else:
             return {"status": 0, "info": "Image invalide"}
     else:
@@ -195,4 +195,4 @@ def appconnexion():
 
 if __name__ == '__main__':
     flask.debug = False
-    flask.run()
+    flask.run(host='0.0.0.0', port=80)
