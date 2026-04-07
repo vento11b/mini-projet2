@@ -9,9 +9,9 @@ DEFAULT_CONDITIONS = [lambda passwd: len(passwd) >= 8,
                     lambda pw: any([c.isdigit() for c in pw]),
                     lambda pw: any([c in "!@#$%^&*" for c in pw])]
 
-
-
 conn = sqlite3.connect(DB_FILE, check_same_thread=False)
+
+
 conn.execute("PRAGMA foreign_keys = ON;")
 
 def debug(*args, **kwargs):

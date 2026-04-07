@@ -195,4 +195,4 @@ def appconnexion():
 
 if __name__ == '__main__':
     flask.debug = False
-    flask.run()
+    flask.run(host='0.0.0.0', port=80)
