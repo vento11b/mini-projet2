@@ -296,7 +296,17 @@ async function addFriend(name) {
         friend.value = "";
     }
     else {
-        alert(data.info);
+        switch (data.info) {
+            case "FOREIGN KEY constraint failed":
+                alert("Cet utilisateur n'existe pas.");
+                break;
+            case "CHECK constraint failed: username != friend":
+                alert("tu ne peux pas t'ajouter toi-même comme ami");
+                break;
+            case "UNIQUE constraint failed: friends.username, friends.friend":
+                alert("Tu es déjà ami avec cet utilisateur");
+                break;
+        }
     }
 
     update();
