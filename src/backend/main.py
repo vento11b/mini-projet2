@@ -5,7 +5,7 @@ import json, base64
 #from urllib import urlencode # -> python2 
 from urllib.parse import urlencode # -> python3
 
-
+# def = fonciton 
 
 
 flask = Flask(__name__)
