@@ -285,12 +285,19 @@ document.querySelector("#input button").onclick = sendMessage;
 
 
 async function addFriend(name) {
-    if (!name) return;
+    const friend = document.getElementById('addfriend')
+    if (!friend.value) return;
 
-    const res = await fetch(`/app/ajouter/${name}`, { method: "POST" });
+    const res = await fetch(`/app/ajouter/${friend.value}`, { method: "POST" });
     const data = await res.json();
 
-    //alert(data.info);
+    console.log(data)
+    if (data.status) {
+        friend.value = "";
+    }
+    else {
+        alert(data.info);
+    }
 
     update();
 }
