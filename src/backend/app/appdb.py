@@ -132,6 +132,14 @@ def get_channel_chat_history(channel):
         return (0, str(er))
     return (1, [message for message in cursor.fetchall()])
 
+def get_channel_members(channel):
+    cursor = conn.cursor()
+    try:
+        cursor.execute("SELECT username FROM channel_members WHERE channel=?;", (channel,))
+    except sqlite3.Error as er:
+        return (0, str(er))
+    return (1, [username for username in cursor.fetchall()])
+
 def send_friend(username, friend, message, message_type='text'):
     cursor = conn.cursor()
     try:

@@ -155,8 +155,15 @@ function openChannelChat(channel) {
     window.history.pushState({}, "", url);
 
     document.getElementById("chat-info").innerText = "Salon " + channel;
-
     loadMessages();
+}
+
+async function loadMembres(channelName) {
+    if (!channelName) return;
+
+    const res = await fetch(`/app/salon/membres/${channelName}`, { method: "POST" });
+    const data = await res.json();
+    console.log(data);
 }
 
 let lastmessages = {}

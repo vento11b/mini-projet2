@@ -10,6 +10,10 @@ from urllib.parse import urlencode # -> python3
 
 flask = Flask(__name__)
 
+@flask.route("/favicon.ico")
+def favicon():
+    return send_from_directory("../frontend/ressources", "Toki-removebg-preview2.png")
+
 @flask.route("/src/frontend/<path:file>")
 def src(file):
     return send_from_directory("../frontend",file)
@@ -110,8 +114,12 @@ def send_channel(channel):
 
 @flask.route("/app/salon/messages/<channel>", methods=["POST"])
 def get_channel_messages(channel):
-    # Gestion de chats privees
     resp = appdb.get_channel_chat_history(channel)
+    return {"status": resp[0], "info": resp[1]}
+
+@flask.route("/app/salon/membres/<channel>", methods=["POST"])
+def get_channel_members(channel):
+    resp = appdb.get_channel_members(channel)
     return {"status": resp[0], "info": resp[1]}
 
 @flask.route("/app/info", methods=["POST"])
