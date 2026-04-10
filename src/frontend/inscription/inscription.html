@@ -29,7 +29,7 @@
             
 
             <!-- lien pour connecter interface inscription et connexion ci-dessous -->
-            <input type="submit" value="S'inscrire">
+            <input id="submitBtn" type="submit" value="S'inscrire">
             <p>Déjà inscrit ? <a href="/connexion">Se connecter</a></p>
         </form>
     </div>
@@ -39,19 +39,24 @@
             alert(error);
         }
 
-        //const form = document.getElementById('form');
-        //const password = document.getElementById('password');
-        //const confirmPassword = document.getElementById('confirm_password');
+        document.getElementById('confirm_password').addEventListener('input', () => {
+            const password = document.getElementById('password');
+            const confirmPassword = document.getElementById('confirm_password');
+            const submitBtn = document.getElementById('submitBtn');
+            let isValid = true;
 
-        //form.addEventListener('submit', (e) => {
-        //  confirmPassword.setCustomValidity('');
-        //
-        //  if (password.value !== confirmPassword.value) {
-        //    confirmPassword.setCustomValidity("La confirmation ne correspond pas au mot de passe");
-        //    confirmPassword.reportValidity();
-        //    e.preventDefault();
-        //  }
-        //});
+            if (password.value !== confirmPassword.value) {
+                confirmPassword.setCustomValidity("La confirmation ne correspond pas au mot de passe");
+                confirmPassword.reportValidity();
+                submitBtn.disabled = true;
+            }
+            else {
+                confirmPassword.setCustomValidity("");
+                confirmPassword.reportValidity();
+                submitBtn.disabled = false;
+            }
+        });
+
     </script>
 </body>
 

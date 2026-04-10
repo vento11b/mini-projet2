@@ -1,5 +1,5 @@
 import sqlite3, hashlib, sys
-import inspect
+import os.path
 
 DB_FILE = "src/backend/app/Toki.db"
 DEBUG = 0
@@ -9,10 +9,6 @@ DEFAULT_CONDITIONS = [lambda passwd: len(passwd) >= 8,
                     lambda pw: any([c.isdigit() for c in pw]),
                     lambda pw: any([c in "!@#$%^&*" for c in pw])]
 
-conn = sqlite3.connect(DB_FILE, check_same_thread=False)
-
-
-conn.execute("PRAGMA foreign_keys = ON;")
 
 def debug(*args, **kwargs):
     if DEBUG: print(args, kwargs)
@@ -140,7 +136,7 @@ def send_friend(username, friend, message, message_type='text'):
     cursor = conn.cursor()
     try:
         if friend in get_friends(username)[1]:
-            cursor.execute("INSERT INTO private_messages (private_room, username, message, message_type, timestamp) VALUES (?, ?, ?, ?, datetime('now'));", ("".join(sorted([username, friend])), username, message, message_type))
+            cursor.execute("INSERT INTO private_messages (private_room, username, message, message_type, timestamp) VALUES (?, ?, ?, ?, datetime('now', 'localtime'));", ("".join(sorted([username, friend])), username, message, message_type))
             conn.commit()
         else:
             return (0, "not friends")
@@ -153,7 +149,7 @@ def send_channel(username, channel, message, message_type='text'):
     cursor = conn.cursor()
     try:
         debug("")
-        cursor.execute("INSERT INTO channel_messages (channel, username, message, message_type, timestamp) VALUES (?, ?, ?, ?, datetime('now'));", (channel, username, message, message_type))
+        cursor.execute("INSERT INTO channel_messages (channel, username, message, message_type, timestamp) VALUES (?, ?, ?, ?, datetime('now', 'localtime'));", (channel, username, message, message_type))
         conn.commit()
 
     except sqlite3.Error as er:
@@ -183,11 +179,18 @@ def reset_db():
     
     
     conn.commit()
-
+    
     debug("db reseted.")
 
 
+if not os.path.isfile(DB_FILE):
+    conn = sqlite3.connect(DB_FILE, check_same_thread=False)
+    reset_db()
 
+else:
+    conn = sqlite3.connect(DB_FILE, check_same_thread=False)
+
+conn.execute("PRAGMA foreign_keys = ON;")
 
 if __name__ == "__main__":
     DEBUG = 1

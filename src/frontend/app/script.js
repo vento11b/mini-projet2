@@ -183,11 +183,12 @@ async function loadMessages() {
 
 function renderMessages(messages) {
     const container = document.getElementById("message_list");
+    const scrollContainer = document.getElementById("chat-body");
     const currentUser = document.getElementById("username").innerText.trim();
 
-    container.innerHTML = "";
+    const isAtBottom = scrollContainer.scrollHeight - scrollContainer.scrollTop <= scrollContainer.clientHeight + 10;
     
-    const isAtBottom = container.scrollHeight - container.scrollTop <= container.clientHeight + 10;
+    container.innerHTML = "";
 
     messages.forEach(msg => {
         const [id, sender, content, message_type, time] = msg;
@@ -223,7 +224,7 @@ function renderMessages(messages) {
     });
 
     if (isAtBottom) {
-        container.scrollTop = container.scrollHeight;
+        scrollContainer.scrollTop = scrollContainer.scrollHeight;
     }
 }
 
