@@ -3,11 +3,11 @@ import os.path
 
 DB_FILE = "src/backend/app/Toki.db"
 DEBUG = 0
-DEFAULT_CONDITIONS = [lambda passwd: len(passwd) >= 8,
-                    lambda pw: any([c.isupper() for c in pw]),
-                    lambda pw: any([c.islower() for c in pw]),
-                    lambda pw: any([c.isdigit() for c in pw]),
-                    lambda pw: any([c in "!@#$%^&*" for c in pw])]
+DEFAULT_CONDITIONS = [lambda passwd: len(passwd) >= 8,   # condition pour les mots de passe au moins 8 caratères
+                    lambda pw: any([c.isupper() for c in pw]),  # condition pour les mots de passe au moins une majuscule
+                    lambda pw: any([c.islower() for c in pw]),  # condition pour les mots de passe au moins une minuscule
+                    lambda pw: any([c.isdigit() for c in pw]),  # condition pour les mots de passe au moins un chffre 
+                    lambda pw: any([c in "!@#$%^&*" for c in pw])]  # condition pour les mots de passe au moins un caractére special 
 
 
 def debug(*args, **kwargs):
