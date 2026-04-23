@@ -156,9 +156,7 @@ def deconnexion():
 
 @flask.route("/app/inscription", methods=["POST"])
 def appinscription():
-    resp = Response()
-    resp.content_type = "application/json"
-    resp.status_code = 302
+    resp = Response(content_type = "application/json", status = 302)
     # Recevoir les donnes pour l'inscription:
     username, password = request.form.get("username"), request.form.get("password")
 
@@ -182,22 +180,18 @@ def appinscription():
 
 @flask.route("/app/connexion", methods=["POST"])
 def appconnexion():
-    resp = Response()
-    resp.content_type = "application/json"
-    resp.status_code = 302
-
+    resp = Response(content_type = "application/json", status = 302)
+    
     # Recevoir les donnes pour l'inscription:
     username, password = request.form.get("username"), request.form.get("password")
     
-    if appdb.check_credentials(username, password)[0]:
-        # Creer une session
-        session_id = session.create(username)
-        # Creer la cookie
-        resp.set_cookie("session_id", session_id)
+    if appdb.check_credentials(username, password)[0]:  # Si les identifiants sont corrects
+        session_id = session.create(username)           # Creer une session
+        resp.set_cookie("session_id", session_id)       # Creer la cookie
         resp.location = "/app"
     else:
         error = {"error": "Le nom d\'utilisateur ou le mot de passe est incorrect"}
-        resp.location = "/connexion?"+urlencode(error)
+        resp.location = "/connexion?"+urlencode(error)  # Envoyer l'information de l'erreur dans la url
 
     return resp
 

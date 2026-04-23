@@ -178,12 +178,12 @@ def reset_db():
 
     conn.execute("PRAGMA foreign_keys = ON;")
     
-    cursor.execute("CREATE TABLE users(username TEXT PRIMARY KEY, password TEXT);")
-    cursor.execute("CREATE TABLE friends(username TEXT, friend TEXT, CHECK (username != friend), PRIMARY KEY (username, friend), FOREIGN KEY(username) REFERENCES users(username), FOREIGN KEY(friend) REFERENCES users(username));")
-    cursor.execute("CREATE TABLE channels(name TEXT PRIMARY KEY, admin TEXT NOT NULL, FOREIGN KEY(admin) REFERENCES users(username));")
-    cursor.execute("CREATE TABLE channel_messages(id INTEGER PRIMARY KEY, channel TEXT, username TEXT, message TEXT, message_type TEXT DEFAULT 'text', timestamp TEXT, FOREIGN KEY(channel) REFERENCES channels(name), FOREIGN KEY(username) REFERENCES users(username));")
-    cursor.execute("CREATE TABLE private_messages(id INTEGER PRIMARY KEY, private_room TEXT, username TEXT, message TEXT, message_type TEXT DEFAULT 'text', timestamp TEXT, FOREIGN KEY(username) REFERENCES users(username));")
-    cursor.execute("CREATE TABLE channel_members(channel TEXT, username TEXT, PRIMARY KEY (channel, username), FOREIGN KEY(channel) REFERENCES channels(name));")
+    cursor.execute("CREATE TABLE users(username TEXT PRIMARY KEY NOT NULL, password TEXT NOT NULL);")
+    cursor.execute("CREATE TABLE friends(username TEXT NOT NULL, friend TEXT NOT NULL, CHECK (username != friend), PRIMARY KEY (username, friend), FOREIGN KEY(username) REFERENCES users(username), FOREIGN KEY(friend) REFERENCES users(username));")
+    cursor.execute("CREATE TABLE channels(name TEXT PRIMARY KEY NOT NULL, admin TEXT NOT NULL, FOREIGN KEY(admin) REFERENCES users(username));")
+    cursor.execute("CREATE TABLE channel_messages(id INTEGER PRIMARY KEY NOT NULL, channel TEXT NOT NULL, username TEXT NOT NULL, message TEXT NOT NULL, message_type TEXT NOT NULL DEFAULT 'text', timestamp TEXT, FOREIGN KEY(channel) REFERENCES channels(name), FOREIGN KEY(username) REFERENCES users(username));")
+    cursor.execute("CREATE TABLE private_messages(id INTEGER PRIMARY KEY NOT NULL, private_room TEXT NOT NULL, username TEXT NOT NULL, message TEXT NOT NULL, message_type TEXT NOT NULL DEFAULT 'text', timestamp TEXT NOT NULL, FOREIGN KEY(username) REFERENCES users(username));")
+    cursor.execute("CREATE TABLE channel_members(channel TEXT NOT NULL, username TEXT NOT NULL, PRIMARY KEY (channel, username), FOREIGN KEY(channel) REFERENCES channels(name));")
     
     
     conn.commit()
