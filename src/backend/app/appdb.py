@@ -10,7 +10,7 @@ DEFAULT_CONDITIONS = [lambda passwd: len(passwd) >= 8,   # condition pour les mo
                     lambda pw: any([c in "!@#$%^&*" for c in pw])]  # condition pour les mots de passe au moins un caractére special 
 
 
-def debug(*args, **kwargs):
+def debug(*args, **kwargs): # def = indique que on definie une fontion 
     if DEBUG: print(args, kwargs)
 
 def check_credentials(username, password):
@@ -20,7 +20,7 @@ def check_credentials(username, password):
 
 def username_exist(username):
     cursor = conn.cursor()
-    cursor.execute("SELECT username FROM users WHERE username = ?", (username,))
+    cursor.execute("SELECT username FROM users WHERE username = ?", (username,)) # cursor.execute permet d'envoyer une commande SQL a la base de données
     return (len(cursor.fetchall()), "")
 
 def channel_exist(channel):
@@ -166,10 +166,10 @@ def send_channel(username, channel, message, message_type='text'):
     return (1, "")
 
 def reset_db():
-    conn.execute("PRAGMA foreign_keys = OFF;")
+    conn.execute("PRAGMA foreign_keys = OFF;")  #
     cursor = conn.cursor()
 
-    cursor.execute("DROP TABLE IF EXISTS users;")
+    cursor.execute("DROP TABLE IF EXISTS users;") # cursor.execute permet d'envoyer une commande SQL a la base de données
     cursor.execute("DROP TABLE IF EXISTS friends;")
     cursor.execute("DROP TABLE IF EXISTS channels;")
     cursor.execute("DROP TABLE IF EXISTS channel_messages;")
@@ -186,7 +186,7 @@ def reset_db():
     cursor.execute("CREATE TABLE channel_members(channel TEXT NOT NULL, username TEXT NOT NULL, PRIMARY KEY (channel, username), FOREIGN KEY(channel) REFERENCES channels(name));")
     
     
-    conn.commit()
+    conn.commit()   # sert a valider les changements dans la base de données
     
     debug("db reseted.")
 

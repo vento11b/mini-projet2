@@ -5,12 +5,12 @@ import json, base64
 #from urllib import urlencode # -> python2 
 from urllib.parse import urlencode # -> python3
 
-# def = fonciton 
+# def = fonction 
 
 
 flask = Flask(__name__)
 
-@flask.route("/favicon.ico")
+@flask.route("/favicon.ico")     # flask.route() est un decorateur qui associe une URL a une fonction
 def favicon():
     return send_from_directory("../frontend/ressources", "Toki-removebg-preview2.png")
 
