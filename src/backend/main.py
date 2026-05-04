@@ -10,7 +10,7 @@ from urllib.parse import urlencode # -> python3
 
 flask = Flask(__name__)
 
-@flask.route("/favicon.ico")     # flask.route() est un decorateur qui associe une URL a une fonction
+@flask.route("/favicon.ico")     # flask.route() est un decorateur qui associe une URL a une fonction et decorateur = une fonction qui modifie le comportement d'une autre fonction
 def favicon():
     return send_from_directory("../frontend/ressources", "Toki-removebg-preview2.png")
 
