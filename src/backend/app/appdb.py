@@ -1,3 +1,4 @@
+# coding=latin-1
 import sqlite3, hashlib, sys
 import os.path
 
