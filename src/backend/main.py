@@ -2,8 +2,8 @@ from flask import Flask, request, Response,send_from_directory, redirect, g
 from app import appdb, session
 import json, base64
 
-from urllib import urlencode # -> python2 
-#from urllib.parse import urlencode # -> python3
+#from urllib import urlencode # -> python2 
+from urllib.parse import urlencode # -> python3
 
 # def = fonction 
 
@@ -14,7 +14,7 @@ flask = Flask(__name__)
 def favicon():
     return send_from_directory("../frontend/ressources", "Toki-removebg-preview2.png")
 
-@flask.route("/src/frontend/<path:file>")
+@flask.route("/src/frontend/<path:file>") # route pour les fichiers statique 
 def src(file):
     return send_from_directory("../frontend",file)
 
@@ -22,11 +22,11 @@ def src(file):
 def index():
     return redirect("/app")
 
-@flask.route("/connexion")
+@flask.route("/connexion")  # decorateur pour la route de connexion
 def connexion():
     return send_from_directory("../frontend/connexion", "connexion.html")
 
-@flask.route("/inscription")
+@flask.route("/inscription")    # decorateur pour la route d'inscription
 def inscription():
     return send_from_directory("../frontend/inscription", "inscription.html")
 
@@ -131,6 +131,7 @@ def info():
 def get_friends():
     resp = appdb.get_friends(g.username)
     return {"status": resp[0], "info": resp[1]}
+
 
 @flask.route("/app/salons", methods=["POST"])
 def get_channels():
