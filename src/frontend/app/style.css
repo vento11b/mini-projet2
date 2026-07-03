@@ -73,16 +73,84 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 8px;
 }
 
-.logout {
-    background: #ff4d4d;
+.account-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.logout,
+.voirCompte {
     border: none;
     padding: 5px 10px;
     color: white;
     cursor: pointer;
+    border-radius: 4px;
+    font-size: 14px;
 }
 
+.logout {
+    background: #ff4d4d;
+}
+
+.voirCompte {
+    background: #5d7cff;
+}
+
+#Compte-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    z-index: 1000;
+}
+
+#Compte-modal.active {
+    display: flex;
+}
+
+#Compte-content {
+    width: min(560px, 100%);
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+}
+
+#Compte-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    background: #f0f4fa;
+    border-bottom: 1px solid #ddd;
+}
+
+#Compte-header h2 {
+    margin: 0;
+    font-size: 18px;
+}
+
+/*.Compte-content  {
+    border: none;
+    background: transparent;
+    font-size: 24px;
+    line-height: 1;
+    color: #333;
+    cursor: pointer;
+}
+*/ /* voir cette config a refaire ou pas */
+
+#voirCompte-body {
+    padding: 20px;
+    color: #222;
+    background: #fff;
+}
 
 #chat {
     flex: 1;

@@ -7,7 +7,7 @@
     <script defer src="/src/frontend/app/script.js"></script>
     <title>Toki</title>
 </head>
-<body onload="reloadInfo();"><div id="app">
+<body><div id="app">
     <!-- SIDEBAR -->
     <div id="chatlist">
         <div id="chatlist-top">
@@ -32,7 +32,10 @@
                 <div class="user-info">
                     <span id="username"></span>
                 </div>
-                <button class="logout" onclick="deconnexion()">Déconnexion</button>
+                <div class="account-buttons">
+                    <button class="voirCompte" onclick="openCompte()">👤</button>
+                    <button class="logout" onclick="deconnexion()">Déconnexion</button>
+                </div>
             </div>
         </div>
     </div>
@@ -58,6 +61,20 @@
                 <input type="file" id="image_input" accept="image/*" style="display: none;">
                 <label for="image_input">Image</label>
                 <button onclick="sendMessage()">Envoyer</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="Compte-modal" aria-hidden="true">
+        <div id="Compte-content">
+            <div id="Compte-header">
+                <h2>Compte 👤</h2>
+                <button class="close-Compte" onclick="closeCompte()"> X </button>
+            </div>
+            <div id="voirCompte-body">
+                <p>Nom d'utilisateur : <strong id="compte-username"></strong></p>
+                <p>Date de création : <strong id="compte-created-at"></strong></p>
+                
             </div>
         </div>
     </div>

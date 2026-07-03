@@ -40,12 +40,24 @@ def check_password(password, conditions=None):      # fonction qui verifie si le
 def add_user(username, password):       # fonction pour ajouter un utilisateur dans la base de données
     cursor = conn.cursor()
     try:
-        cursor.execute("INSERT INTO users(username, password) VALUES (?, ?)", (username, hashlib.sha256(password.encode()).hexdigest()))
+        cursor.execute("INSERT INTO users(username, password, created_at) VALUES (?, ?, datetime('now', 'localtime'))", (username, hashlib.sha256(password.encode()).hexdigest()))
         conn.commit()
     except sqlite3.Error as er:
         return (0, str(er))
     
     return (1, "")
+
+
+def get_user_info(username):
+    cursor = conn.cursor()
+    try:
+        cursor.execute("SELECT username, created_at FROM users WHERE username = ?", (username,))
+        row = cursor.fetchone()
+        if not row:
+            return (0, "Utilisateur non trouvé")
+        return (1, {"username": row[0], "created_at": row[1]})
+    except sqlite3.Error as er:
+        return (0, str(er))
 
 
 def get_usernames():        #fonction pour recuperer tous les noms d'utilisateurs dans la base de données
@@ -180,7 +192,7 @@ def reset_db():
 
     conn.execute("PRAGMA foreign_keys = ON;")
     
-    cursor.execute("CREATE TABLE users(username TEXT PRIMARY KEY NOT NULL, password TEXT NOT NULL);")
+    cursor.execute("CREATE TABLE users(username TEXT PRIMARY KEY NOT NULL, password TEXT NOT NULL, created_at TEXT NOT NULL DEFAULT (datetime('now', 'localtime')));")
     cursor.execute("CREATE TABLE friends(username TEXT NOT NULL, friend TEXT NOT NULL, CHECK (username != friend), PRIMARY KEY (username, friend), FOREIGN KEY(username) REFERENCES users(username), FOREIGN KEY(friend) REFERENCES users(username));")
     cursor.execute("CREATE TABLE channels(name TEXT PRIMARY KEY NOT NULL, admin TEXT NOT NULL, FOREIGN KEY(admin) REFERENCES users(username));")
     cursor.execute("CREATE TABLE channel_messages(id INTEGER PRIMARY KEY NOT NULL, channel TEXT NOT NULL, username TEXT NOT NULL, message TEXT NOT NULL, message_type TEXT NOT NULL DEFAULT 'text', timestamp TEXT, FOREIGN KEY(channel) REFERENCES channels(name), FOREIGN KEY(username) REFERENCES users(username));")
@@ -201,6 +213,15 @@ else:
     conn = sqlite3.connect(DB_FILE, check_same_thread=False)
 
 conn.execute("PRAGMA foreign_keys = ON;")
+
+# Assurer que la colonne created_at existe dans la table users
+cursor = conn.cursor()
+cursor.execute("PRAGMA table_info(users)")
+columns = [row[1] for row in cursor.fetchall()]
+if "created_at" not in columns:
+    cursor.execute("ALTER TABLE users ADD COLUMN created_at TEXT;")
+    cursor.execute("UPDATE users SET created_at = datetime('now', 'localtime') WHERE created_at IS NULL;")
+    conn.commit()
 
 if __name__ == "__main__":
     DEBUG = 1

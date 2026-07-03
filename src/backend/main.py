@@ -124,7 +124,16 @@ def get_channel_members(channel):
 
 @flask.route("/app/info", methods=["POST"])
 def info():
-    resp = {"username": g.username, "amis": appdb.get_friends(g.username)[1], "requetes_amis": appdb.get_friend_requests(g.username)[1], "salons": appdb.get_user_channels(g.username)[1]}
+    user_resp = appdb.get_user_info(g.username)
+    if user_resp[0] != 1:
+        return {"status": 0, "info": "Utilisateur introuvable"}
+    resp = {
+        "username": user_resp[1]["username"],
+        "created_at": user_resp[1]["created_at"],
+        "amis": appdb.get_friends(g.username)[1],
+        "requetes_amis": appdb.get_friend_requests(g.username)[1],
+        "salons": appdb.get_user_channels(g.username)[1]
+    }
     return {"status": 1, "info": resp}
 
 @flask.route("/app/amis", methods=["POST"])

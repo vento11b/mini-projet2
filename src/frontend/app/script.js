@@ -40,6 +40,14 @@ async function update() {
     if (data.status !== 1) return;
     
     document.getElementById("username").innerText = data.info.username;
+    const compteUsername = document.getElementById("compte-username");
+    const compteCreatedAt = document.getElementById("compte-created-at");
+    if (compteUsername) {
+        compteUsername.innerText = data.info.username;
+    }
+    if (compteCreatedAt) {
+        compteCreatedAt.innerText = data.info.created_at || "Inconnue";
+    }
     
     renderContacts(
         data.info.amis,
@@ -339,6 +347,18 @@ async function deconnexion() {
     location.reload();
 }
 
+function openCompte() {
+    const modal = document.getElementById("Compte-modal");
+    modal.classList.add("active");
+    modal.setAttribute("aria-hidden", "false");
+
+}
+
+function closeCompte() {
+    const modal = document.getElementById("Compte-modal");
+    modal.classList.remove("active");
+    modal.setAttribute("aria-hidden", "true");
+}
 
 setInterval(() => {
     update();
