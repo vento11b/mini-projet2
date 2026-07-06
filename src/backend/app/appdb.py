@@ -48,7 +48,7 @@ def add_user(username, password):       # fonction pour ajouter un utilisateur d
     return (1, "")
 
 
-def get_user_info(username):
+def get_user_info(username):         #fonction pour recuperer les informations d'un utilisateur dans la base de données
     cursor = conn.cursor()
     try:
         cursor.execute("SELECT username, created_at FROM users WHERE username = ?", (username,))
@@ -167,7 +167,7 @@ def send_friend(username, friend, message, message_type='text'):        #fonctio
     
     return (1, "")
 
-def send_channel(username, channel, message, message_type='text'):
+def send_channel(username, channel, message, message_type='text'):      #fonction pour envoyer un message dans un groupe/ canal 
     cursor = conn.cursor()
     try:
         debug("")
@@ -179,7 +179,7 @@ def send_channel(username, channel, message, message_type='text'):
     
     return (1, "")
 
-def reset_db():
+def reset_db():         # fonction permettant de reinitialiser la base de données
     conn.execute("PRAGMA foreign_keys = OFF;")  #
     cursor = conn.cursor()
 

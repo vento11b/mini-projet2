@@ -139,7 +139,7 @@ function loadChatFromURL() {
 }
 
 
-function openFriendChat(friend) {
+function openFriendChat(friend) {       // fonction pour ouvrir le chat avec un ami 
     currentChat = friend;
     currentType = "friend";
 
@@ -153,7 +153,7 @@ function openFriendChat(friend) {
     loadMessages();
 }
 
-function openChannelChat(channel) {
+function openChannelChat(channel) {     // fonction pour ouvrir le chat avec un ami
     currentChat = channel;
     currentType = "channel";
 
@@ -166,7 +166,7 @@ function openChannelChat(channel) {
     loadMessages();
 }
 
-async function loadMembres(channelName) {
+async function loadMembres(channelName) {      // fonction pour charger les membres d'un salon 
     if (!channelName) return;
 
     const res = await fetch(`/app/salon/membres/${channelName}`, { method: "POST" });
@@ -196,7 +196,7 @@ async function loadMessages() {
     }
 }
 
-function renderMessages(messages) {
+function renderMessages(messages) {     // fonction pour afficher les messages dans le chat 
     const container = document.getElementById("message_list");
     const scrollContainer = document.getElementById("chat-body");
     const currentUser = document.getElementById("username").innerText.trim();
@@ -244,7 +244,7 @@ function renderMessages(messages) {
 }
 
 
-async function sendMessage() {
+async function sendMessage() {      // fonction pour envoyer le message dans le chat 
     if (!currentChat) return;
     const input = document.getElementById("message_input");
     const imageInput = document.getElementById("image_input");
@@ -290,7 +290,7 @@ async function sendMessage() {
 }
 
 
-function removeImage() {
+function removeImage() {        // fonction pour supprimer l'image de l'aperçu 
     document.getElementById("image_preview").style.display = "none";
     document.getElementById("preview_img").src = "";
     document.getElementById("image_input").value = "";
@@ -299,7 +299,7 @@ function removeImage() {
 document.querySelector("#input button").onclick = sendMessage;
 
 
-async function addFriend(name) {
+async function addFriend(name) {        // fonction pour ajouter un ami 
     const friend = document.getElementById('addfriend')
     if (!friend.value) return;
 
@@ -327,7 +327,7 @@ async function addFriend(name) {
     update();
 }
 
-async function addChannel() {
+async function addChannel() {       // fonction pour ajouter un salon 
     const input = document.getElementById("addchannel");
     const channelName = input.value.trim();
     if (!channelName) return;
@@ -342,24 +342,24 @@ async function addChannel() {
 }
 
 
-async function deconnexion() {
+async function deconnexion() {      // fonction pour se deconnecter
     await fetch("/app/deconnexion", { method: "POST" });
     location.reload();
 }
 
-function openCompte() {
+function openCompte() {     // fonction pour ouvrir les differentes information sur le compte de utilisateur
     const modal = document.getElementById("Compte-modal");
     modal.classList.add("active");
     modal.setAttribute("aria-hidden", "false");
 
 }
 
-function closeCompte() {
+function closeCompte() {        // fonction pour fermer les diiferentes information sur le compte de utilisateur
     const modal = document.getElementById("Compte-modal");
     modal.classList.remove("active");
     modal.setAttribute("aria-hidden", "true");
 }
 
-setInterval(() => {
+setInterval(() => {     // 
     update();
 }, 1000);
