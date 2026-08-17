@@ -167,7 +167,7 @@ def deconnexion():
 @flask.route("/app/inscription", methods=["POST"])
 def appinscription():
     resp = Response(content_type = "application/json", status = 302)
-    # Recevoir les donnes pour l'inscription:
+    # Recevoir les données pour l'inscription:
     username, password = request.form.get("username"), request.form.get("password")
 
     if appdb.check_password(password):
